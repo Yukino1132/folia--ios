@@ -52,6 +52,9 @@ TODO.MD
 commit.md
 .codebuff-ai/reasson/conf.jsonc
 scripts/*
+# iOS 打包脚本必须入库：GitHub Actions 的 macOS runner 靠它们产出 IPA。
+!scripts/ios/
+!scripts/ios/**
 docs/TODO.md
 design/
 plan/
