@@ -1,6 +1,7 @@
 import UIKit
 import Capacitor
 import AVFoundation
+import MediaPlayer
 
 // Folia iOS 宿主 AppDelegate
 // - 配置 AVAudioSession 为 Playback，支持锁屏/后台播放与混音
