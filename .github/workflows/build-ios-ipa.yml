@@ -42,11 +42,6 @@ on:
 permissions:
   contents: write
 
-concurrency:
-  # 按 commit 分组：同一个 ref 上连续推送时，旧的构建会被取消，
-  # 而组名带 sha 可以避免「新 run 取消旧 run、旧 run 又取消新 run」的互杀。
-  group: build-ios-ipa-${{ github.sha }}
-  cancel-in-progress: true
 
 jobs:
   build-ipa:
