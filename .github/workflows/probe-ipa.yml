@@ -11,13 +11,30 @@ on:
       - '.github/workflows/probe-ipa.yml'
 
 jobs:
-  probe:
-    name: Probe
-    runs-on: macos-14
+  probe-linux:
+    name: Probe linux
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Hello
+        run: uname -a
+
+  probe-macos-latest:
+    name: Probe macos-latest
+    runs-on: macos-latest
     timeout-minutes: 10
     steps:
       - name: Hello
         run: |
-          echo "runner: $(uname -a)"
-          echo "xcodebuild: $(xcodebuild -version || true)"
-          echo "PODS: $(pod --version || true)"
+          uname -a
+          xcodebuild -version || true
+
+  probe-macos-15:
+    name: Probe macos-15
+    runs-on: macos-15
+    timeout-minutes: 10
+    steps:
+      - name: Hello
+        run: |
+          uname -a
+          xcodebuild -version || true
