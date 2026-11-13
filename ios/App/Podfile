@@ -1,0 +1,27 @@
+require_relative '../../node_modules/@capacitor/ios/scripts/pods_helpers'
+
+# Folia iOS：Capacitor 壳。
+# 自定义原生能力（FoliaMediaPlugin.swift 锁屏/后台播放/触觉/分享、FoliaBridgeViewController.swift 插件注册）
+# 直接在 App target 里编译，不需要额外的 pod；只有 Capacitor 本体走 CocoaPods。
+# 部署目标跟 Xcode 工程保持一致（15.0）：WKWebView 在 iOS 15 起才完整支持 Folia 用到的 ES2022 语法。
+platform :ios, '15.0'
+use_frameworks!
+
+# workaround to avoid Xcode caching of Pods that requires
+# Product -> Clean Build Folder after new Cordova plugins installed
+# Requires CocoaPods 1.6 or newer
+install! 'cocoapods', :disable_input_output_paths => true
+
+def capacitor_pods
+  pod 'Capacitor', :path => '../../node_modules/@capacitor/ios'
+  pod 'CapacitorCordova', :path => '../../node_modules/@capacitor/ios'
+end
+
+target 'App' do
+  capacitor_pods
+  # Add your Pods here
+end
+
+post_install do |installer|
+  assertDeploymentTarget(installer)
+end

@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>zh_CN</string>
+	<key>CFBundleLocalizations</key>
+	<array>
+		<string>zh_CN</string>
+		<string>zh_TW</string>
+		<string>en</string>
+		<string>id</string>
+	</array>
+	<key>CFBundleDisplayName</key>
+	<string>Folia</string>
+	<key>CFBundleExecutable</key>
+	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleIdentifier</key>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>$(PRODUCT_NAME)</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>$(MARKETING_VERSION)</string>
+	<key>CFBundleVersion</key>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>UILaunchStoryboardName</key>
+	<string>LaunchScreen</string>
+	<key>UIMainStoryboardFile</key>
+	<string>Main</string>
+	<key>UIRequiredDeviceCapabilities</key>
+	<array>
+		<string>arm64</string>
+	</array>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+	<key>UISupportedInterfaceOrientations~ipad</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<true/>
+	<key>UIStatusBarStyle</key>
+	<string>UIStatusBarStyleLightContent</string>
+	<key>UIUserInterfaceStyle</key>
+	<string>Dark</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
+	<key>NSHumanReadableCopyright</key>
+	<string>Folia · AGPL-3.0 · https://github.com/chthollyphile/folia-major</string>
+
+	<!-- ================= 自定义 URL Scheme / 通用链接 ================= -->
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>top.izuna.foliamajor.ios</string>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>folia</string>
+			</array>
+		</dict>
+	</array>
+
+	<!-- ================= 后台音频播放（锁屏 / 后台常驻） ================= -->
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>audio</string>
+		<string>fetch</string>
+	</array>
+	<key>AVAudioSessionCategory</key>
+	<string>AVAudioSessionCategoryPlayback</string>
+
+	<!-- ================= ATS：允许直连在线音乐接口 ================= -->
+	<!-- 平台接口（网易云/QQ/酷狗）多为 https，但部分音源与歌词 CDN 走 http，
+	     因此放开任意加载；上传/本地库仍走 HTTPS。 -->
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+		<key>NSAllowsArbitraryLoadsInWebContent</key>
+		<true/>
+		<key>NSAllowsArbitraryLoadsForMedia</key>
+		<true/>
+		<key>NSAllowsLocalNetworking</key>
+		<true/>
+	</dict>
+
+	<!-- ================= 本地网络（NAS / Navidrome / 桌面联动） ================= -->
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>Folia 需要访问本地网络以连接你自建的 Navidrome 音乐服务器、同步服务或 Stage 联动设备。</string>
+	<key>NSBonjourServices</key>
+	<array>
+		<string>_http._tcp</string>
+		<string>_navidrome._tcp</string>
+		<string>_folia._tcp</string>
+	</array>
+
+	<!-- ================= 媒体库与文件访问 ================= -->
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Folia 需要读取相册中的图片，用作自定义播放背景或歌词封面。</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Folia 需要保存图片到相册（例如导出歌词卡片或主题截图）。</string>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>Folia 需要访问 Apple Music 媒体库以读取与播放你的歌曲。</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Folia 使用麦克风用于语音输入与即时听音识别（可选功能）。</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Folia 使用相机扫描二维码完成登录。</string>
+	<key>NSDocumentsFolderUsageDescription</key>
+	<string>Folia 需要访问「文件」中的音乐目录，以便导入本地音乐库。</string>
+
+	<!-- ================= 文件类型关联 ================= -->
+	<key>LSSupportsOpeningDocumentsInPlace</key>
+	<true/>
+	<key>UIFileSharingEnabled</key>
+	<true/>
+	<key>CFBundleDocumentTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeName</key>
+			<string>Audio</string>
+			<key>LSHandlerRank</key>
+			<string>Alternate</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>public.audio</string>
+				<string>public.mp3</string>
+				<string>public.mpeg-4-audio</string>
+				<string>com.microsoft.waveform-audio</string>
+				<string>public.aiff-audio</string>
+				<string>org.xiph.flac</string>
+				<string>public.mpeg-4</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeName</key>
+			<string>Lyrics</string>
+			<key>LSHandlerRank</key>
+			<string>Alternate</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+		</dict>
+	</array>
+</dict>
+</plist>

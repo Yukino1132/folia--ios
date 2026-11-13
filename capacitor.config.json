@@ -1,0 +1,32 @@
+{
+  "appId": "top.izuna.foliamajor.ios",
+  "appName": "Folia",
+  "webDir": "dist",
+  "bundledWebRuntime": false,
+  "ios": {
+    "scheme": "folia",
+    "contentInset": "never",
+    "backgroundColor": "#09090b",
+    "limitsNavigationsToAppBoundDomains": false,
+    "webContentsDebuggingEnabled": true
+  },
+  "plugins": {
+    "Keyboard": {
+      "resize": "native",
+      "resizeOnFullScreen": true
+    },
+    "StatusBar": {
+      "style": "DARK",
+      "backgroundColor": "#09090b",
+      "overlaysWebView": true
+    },
+    "CapacitorHttp": {
+      "enabled": true
+    }
+  },
+  "server": {
+    "iosScheme": "capacitor",
+    "hostname": "localhost.folia",
+    "cleartext": true
+  }
+}
