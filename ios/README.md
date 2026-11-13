@@ -90,3 +90,5 @@ node scripts/ios/build-ipa.mjs --skip-build   # 复用上次 archive
 ## 授权
 
 上游为 AGPL-3.0，本衍生版本沿用同一许可。分发时请保留上游版权声明与仓库链接。
+
+<!-- 构建触发时间：2026-11-13T23:01:50.347Z -->
