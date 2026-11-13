@@ -1,0 +1,23 @@
+# .github/workflows/probe-ipa.yml
+# 临时探针：最小化触发条件，确认 macOS runner 是否可用。验证完即删除。
+
+name: Probe macOS runner
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/probe-ipa.yml'
+
+jobs:
+  probe:
+    name: Probe
+    runs-on: macos-14
+    timeout-minutes: 10
+    steps:
+      - name: Hello
+        run: |
+          echo "runner: $(uname -a)"
+          echo "xcodebuild: $(xcodebuild -version || true)"
+          echo "PODS: $(pod --version || true)"
