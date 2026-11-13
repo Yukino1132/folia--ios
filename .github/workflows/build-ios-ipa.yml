@@ -46,8 +46,8 @@ permissions:
 jobs:
   build-ipa:
     name: Archive and package IPA
-    # macos-14 是 arm64 的 Xcode 15 镜像，自带 CocoaPods；14 以上足够本项目 iOS 15 的目标。
-    runs-on: macos-14
+    # macos-latest 是 arm64 的 Xcode 16 镜像，自带 CocoaPods；14 以上足够本项目 iOS 15 的目标。
+    runs-on: macos-latest
     timeout-minutes: 60
 
     env:
