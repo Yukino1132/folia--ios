@@ -1,7 +1,7 @@
-// .github/workflows/build-ios-ipa.yml
-// 在 GitHub 的 macOS runner 上把 Capacitor iOS 工程打成未签名 IPA，作为构建产物（以及可选 Release 附件）发布。
-// 触发：手动（workflow_dispatch）或推送与 ios 相关的改动。Windows/Linux 上没有 xcodebuild，
-// 本 workflow 是唯一能一路编出 build/ios/Folia.ipa 的路径。
+# .github/workflows/build-ios-ipa.yml
+# 在 GitHub 的 macOS runner 上把 Capacitor iOS 工程打成未签名 IPA，作为构建产物（以及可选 Release 附件）发布。
+# 触发：手动（workflow_dispatch）或推送与 ios 相关的改动。Windows/Linux 上没有 xcodebuild，
+# 本 workflow 是唯一能一路编出 build/ios/Folia.ipa 的路径。
 
 name: Build iOS IPA
 
