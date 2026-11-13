@@ -80,6 +80,12 @@ jobs:
       - name: Build web assets for the native shell
         run: npm run build:ios
 
+      # config.xml 和 capacitor.config.json 是 Capacitor 生成物，被 ios/.gitignore 排除，
+      # 克隆出来的工程里没有它们；xcodebuild 的 Copy Bundle Resources 会因此失败。
+      # npx cap copy 只做文件同步、不碰 CocoaPods，正好把这两个文件补齐。
+      - name: Sync Capacitor config into the Xcode project
+        run: npx cap copy ios
+
       - name: Install CocoaPods dependencies
         working-directory: ios/App
         run: pod install --repo-update
