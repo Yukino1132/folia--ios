@@ -85,8 +85,10 @@ jobs:
         run: pod install --repo-update
 
       # 复用 build-ipa.mjs：它自己会检查环境、archive（未签名）、拼 Payload 并打包成 ipa。
+      # 不传 --skip-build：那个参数的意思是「复用已有 xcarchive、跳过 xcodebuild」，
+      # Web 产物在上一步已经由 npm run build:ios 生成，这里必须真正执行 archive。
       - name: Archive and package IPA
-        run: node scripts/ios/build-ipa.mjs --skip-build
+        run: node scripts/ios/build-ipa.mjs
 
       - name: Show artifact
         run: ls -lh build/ios/Folia.ipa
