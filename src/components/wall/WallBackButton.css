@@ -59,3 +59,11 @@
 @media (max-width: 640px) {
     .lattice-back { top: calc(14px + var(--window-buttons-drop, 0px)); left: 16px; }
 }
+
+/* iOS 原生壳：AppShell 已经在根节点让开了状态栏，返回钮从这里排下去；40px 圆点按手指目标放大到 44px。 */
+html.folia-ios .lattice-back {
+    top: 12px;
+    left: 16px;
+    width: 44px;
+    height: 44px;
+}

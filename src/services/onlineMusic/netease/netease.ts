@@ -6,6 +6,13 @@ import { withLoginRequestLimit } from '../login/loginRequestLimit';
 import { withOnlineRequestLimit } from '../failure/onlineRequestLimit';
 import { errorFields } from '../../../utils/errorText';
 import { getNeteaseApiBaseOverride, onNeteaseApiBaseChange } from './neteaseEndpointSetting';
+import { isIosNative } from '../../../ios/iosRuntime';
+import {
+  canUseNeteaseQrFallback,
+  checkNeteaseQr,
+  createNeteaseQrImage,
+  requestNeteaseQrKey,
+} from './neteaseQrFallback';
 
 type UnavailableSongReplacement = {
   replacementSong: SongResult;
@@ -769,15 +776,28 @@ export const neteaseApi = {
     return fetchWithCreds(cookie ? `/logout?cookie=${encodeURIComponent(cookie)}` : `/logout`);
   },
 
+  // 扫码三步在没有中转地址时直连网易云（neteaseQrFallback.ts）：装好的 IPA 改不了包，也不能
+  // 再传构建期变量，一个地址都没有时至少让用户把自己账号登进来。
+  // 只有原生壳走这条直连：网页版没有中转地址时报「未配置」才是它该有的提示，也才是测试与
+  // 用户都认得的那个错误码，所以这里必须先问 isIosNative()。
   getQrKey: async () => {
+    if (isIosNative() && canUseNeteaseQrFallback(Boolean(getConfiguredApiBase()))) {
+      return { data: { unikey: await requestNeteaseQrKey() } };
+    }
     return fetchWithCreds(`/login/qr/key`, {}, 'sign-in');
   },
 
   createQr: async (key: string) => {
+    if (isIosNative() && canUseNeteaseQrFallback(Boolean(getConfiguredApiBase()))) {
+      return { data: { qrimg: await createNeteaseQrImage(key) } };
+    }
     return fetchWithCreds(`/login/qr/create?key=${key}&qrimg=true`, {}, 'sign-in');
   },
 
   checkQr: async (key: string) => {
+    if (isIosNative() && canUseNeteaseQrFallback(Boolean(getConfiguredApiBase()))) {
+      return checkNeteaseQr(key);
+    }
     return fetchWithCreds(`/login/qr/check?key=${key}`, {}, 'sign-in');
   },
 

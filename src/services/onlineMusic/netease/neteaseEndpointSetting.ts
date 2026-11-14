@@ -20,7 +20,12 @@ const normalize = (raw: string): string => {
 };
 
 /** 用户填的地址（已规整）；空字符串表示没填。 */
-export const getNeteaseApiBaseOverride = (): string => normalize(getStoredString(STORAGE_KEY, ''));
+export const getNeteaseApiBaseOverride = (): string => {
+    // Node（单元测试、SSR）里没有 localStorage：getStoredString 只挡了 window 缺失，
+    // 而 jsdom 之外的测试环境恰好有全局对象却没有存储 —— 这里再挡一次，读不到就当没填。
+    if (typeof localStorage === 'undefined') return '';
+    return normalize(getStoredString(STORAGE_KEY, ''));
+};
 
 /** 存用户填的地址；传空字符串就是清除。 */
 export const setNeteaseApiBaseOverride = (value: string): void => {

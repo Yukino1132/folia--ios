@@ -401,7 +401,7 @@ const PlayerPage: React.FC = () => {
                 <Row option={O.hidePanelButton}>
                     <Toggle checked={chrome.hidePanelButton} onChange={chrome.setHidePanelButton} />
                 </Row>
-                <Row option={O.alwaysBackButton} hint={t('options.alwaysShowPlayerBackButtonDesc')}>
+                <Row option={O.alwaysBackButton} hint={t(isIosNative() ? 'options.alwaysShowPlayerBackButtonDescTouch' : 'options.alwaysShowPlayerBackButtonDesc')}>
                     <Toggle checked={chrome.alwaysBackButton} onChange={chrome.setAlwaysBackButton} />
                 </Row>
                 <Row option={O.alwaysTrackSwitch} note={t(isIosNative() ? 'options.alwaysShowTrackSwitchButtonsDescTouch' : 'options.alwaysShowTrackSwitchButtonsDesc')}>

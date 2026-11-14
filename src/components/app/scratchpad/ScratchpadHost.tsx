@@ -8,6 +8,7 @@ import { groupScratchpadEntries, scratchpadGroupKey, useScratchpadStore, type Sc
 import { usePlaybackStore } from '../../../stores/usePlaybackStore';
 import { useScratchpadSettingsStore } from '../../../stores/useScratchpadSettingsStore';
 import { PRIMARY_MODIFIER_LABEL } from '../../../utils/platform';
+import { isIosNative } from '../../../ios/iosRuntime';
 import { useReducedMotionFor } from '../../../hooks/useReducedMotionFor';
 import { openAddSongsToPlaylist } from '../../../stores/useAddToPlaylistStore';
 import { canAddScratchpadSongToPlaylist, scratchpadSourceLabel, scratchpadTips, type ScratchpadAction } from './scratchpadModel';
@@ -396,7 +397,8 @@ const ScratchpadHost: React.FC<ScratchpadHostProps> = ({ isDaylight, playback, q
 
     const handleLabel = isOpen ? t('scratchpad.close') : t('scratchpad.open');
     // 悬停提示带上开合的快捷键（命令面板的 scratchpad-toggle，Ctrl / ⌘ + J）。
-    const handleTitle = `${handleLabel} (${PRIMARY_MODIFIER_LABEL} + J)`;
+    // 触屏上凑不出 Ctrl / ⌘ + J，把手提示只留动作名，免得手上没有那个键。
+    const handleTitle = isIosNative() ? handleLabel : `${handleLabel} (${PRIMARY_MODIFIER_LABEL} + J)`;
     const expandLabel = isExpanded ? t('scratchpad.collapseCanvas') : t('scratchpad.expandCanvas');
 
     // 底部按钮是 F 的方角描边按钮：最常用的「全部入队」实心，清空单独靠右（点两下才清，第二下前写明）。

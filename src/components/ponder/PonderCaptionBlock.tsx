@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { ChevronRight, SlidersHorizontal } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import type { PonderTimelinePlan } from '../../types/ponder';
+import { isIosNative } from '../../ios/iosRuntime';
 import { ponderSwapMotion } from './ponderMotion';
 import { ponderModifierLabel } from './PonderKeyCap';
 import type { PonderStageNodes } from './ponderStageNodes';
@@ -13,6 +14,16 @@ import type { PonderStageNodes } from './ponderStageNodes';
 // hidden, one over the other; the lesson timeline shows the one that is being said. What belongs
 // to the chapter and not to a caption sits at the right: the way straight to the setting the
 // chapter is about, and under it the offer of the next chapter.
+
+/*
+ * A touch build of a caption, when the lesson has one.
+ *
+ * The lessons were written for a mouse and a keyboard; on a phone the same step has to be said
+ * with a finger. Rather than branch in every target file, the caption resolves the touch variant
+ * here: `<textKey>Touch` on the phone and the written key everywhere else. The locale carries the
+ * pair — a caption without a touch variant simply has no such key, so it reads exactly as before.
+ */
+const touchCaptionKey = (textKey: string): string => (isIosNative() ? `${textKey}Touch` : textKey);
 
 type PonderCaptionBlockProps = {
     sceneIndex: number;
@@ -69,7 +80,7 @@ const PonderCaptionBlock: React.FC<PonderCaptionBlockProps> = ({
                             className="[grid-area:1/1]"
                             style={{ opacity: 0 }}
                         >
-                            {t(step.textKey, { mod: ponderModifierLabel })}
+                            {t(touchCaptionKey(step.textKey), { mod: ponderModifierLabel })}
                         </div>
                     ) : null))}
                 </div>

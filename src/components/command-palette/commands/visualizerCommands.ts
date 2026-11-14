@@ -7,6 +7,7 @@ import { lyricSegmentationCommand } from './lyricSegmentationCommand';
 import { VISUALIZER_REGISTRY } from '../../visualizer/registry';
 import { VISUALIZER_BACKGROUND_REGISTRY } from '../../visualizer/backgrounds/registry';
 import { isMachiCameraBarOpen, toggleMachiCameraBar } from '../../visualizer/machi/cameraBar';
+import { isIosNative } from '../../../ios/iosRuntime';
 
 // src/components/command-palette/commands/visualizerCommands.ts
 // Commands in the `visualizer` group: switching lyric animation modes and background layouts.
@@ -71,7 +72,7 @@ export const visualizerCommands: CommandPaletteCommand[] = [
         capsuleAction: true,
         requiresInput: true,
         surface: visualizerPickerSurface,
-        placeholder: context => context.shared.t('commandPalette.pickerFilterPlaceholder', 'Type to filter, then click or press Enter'),
+        placeholder: context => context.shared.t(isIosNative() ? 'commandPalette.pickerFilterPlaceholderTouch' : 'commandPalette.pickerFilterPlaceholder', 'Type to filter, then click or press Enter'),
         execute: () => false,
     }),
     defineCommand({
@@ -84,7 +85,7 @@ export const visualizerCommands: CommandPaletteCommand[] = [
         icon: Wallpaper,
         requiresInput: true,
         surface: backgroundPickerSurface,
-        placeholder: context => context.shared.t('commandPalette.pickerFilterPlaceholder', 'Type to filter, then click or press Enter'),
+        placeholder: context => context.shared.t(isIosNative() ? 'commandPalette.pickerFilterPlaceholderTouch' : 'commandPalette.pickerFilterPlaceholder', 'Type to filter, then click or press Enter'),
         execute: () => false,
     }),
     // 智能动感模式's on / off toggle, as v0.7.21 shipped it (from the PR #750 review): kept, and visible,

@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import type { Theme } from '../../../types';
 import { getCommandTitle } from '../commandText';
 import type { CommandPaletteCommand } from '../types';
+import { isIosNative } from '../../../ios/iosRuntime';
 
 // src/components/command-palette/surfaces/ExecuteModeSurfaceView.tsx
 // Cheat sheet for execute mode: every shortcut still reachable from the current buffer, so the
@@ -34,7 +35,7 @@ const ExecuteModeSurfaceView: React.FC<ExecuteModeSurfaceViewProps> = ({
                     {t('commandPalette.executeMode.unknown', 'No command uses "{{keys}}"').replace('{{keys}}', buffer)}
                 </div>
                 <div className="text-xs opacity-70">
-                    {t('commandPalette.executeMode.unknownHint', 'Press Esc to clear and try another key')}
+                    {t(isIosNative() ? 'commandPalette.executeMode.unknownHintTouch' : 'commandPalette.executeMode.unknownHint', 'Press Esc to clear and try another key')}
                 </div>
             </div>
         );

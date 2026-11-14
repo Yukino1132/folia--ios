@@ -12,7 +12,8 @@ import type { TransportButtonAction } from './playback/bridges/useTransportComma
 import { usePlayerOverlayRoot, usePlayerOverlayReservation } from '../../hooks/usePlayerOverlayLayout';
 import { usePlayerChromeSettingsStore } from '../../stores/usePlayerChromeSettingsStore';
 import { useNativeTrafficLights } from '../../hooks/useNativeTrafficLights';
-import { isIosNative } from '../../ios/iosRuntime';
+import { IOS_SAFE_TOP_MIN, isIosNative } from '../../ios/iosRuntime';
+import { useIosTopInsetDebug } from '../../ios/useIosTopInsetDebug';
 import {
     CLICK_THROUGH_MEDIA_CONTROLS_GAP,
     CLICK_THROUGH_UNLOCK_BUTTON_GAP,
@@ -177,12 +178,16 @@ const AppShell: React.FC<AppShellProps> = ({
     const isTitlebarBackdropVisible = isTitlebarRevealed || (showsPlayerHeaderBlur && alwaysShowMainWindowTitlebar);
     // iOS 原生壳把安全区收在根容器的一次内缩里（上面的 top/bottom 内边距），
     // 这样 fixed 定位的播放层、面板、弹窗都自动落在安全区内，不用逐层改定位。
+    // padding 只把内容推下去，但 absolute/fixed 子层仍从 padding 外沿开始，所以这层盒子还要
+    // transform 一下：让它的包含块从内容区左上角算起（顶栏、返回按钮才真正落在状态栏下面）。
     const isIosShell = isIosNative() && !isElectronWindow;
+    useIosTopInsetDebug();
     const safeAreaInsetStyle: React.CSSProperties = isIosShell
         ? {
-            paddingTop: 'var(--folia-safe-top, env(safe-area-inset-top, 0px))',
+            paddingTop: IOS_SAFE_TOP_MIN + 'px',
             paddingBottom: 'var(--folia-safe-bottom, env(safe-area-inset-bottom, 0px))',
             boxSizing: 'border-box',
+            transform: 'translateZ(0)',
         }
         : {};
     // 开了顶栏模糊时用更实的一层：0.18 的白在深色画面上只会混成深灰，浅色主题的深色按钮照样看不清，

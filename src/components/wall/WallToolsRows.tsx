@@ -1,9 +1,13 @@
 import { useRef, useState, type CSSProperties, type KeyboardEvent as ReactKeyboardEvent } from 'react';
 import type { LucideIcon } from 'lucide-react';
+import { isIosNative } from '../../ios/iosRuntime';
 
 // src/components/wall/WallToolsRows.tsx
 // 墙面工具面板（WallToolsButton）里的各种行：条目（动作 / 开关 / 滑条 / 分组小标题）与顶部那排纯图标快捷格。
 // 从 WallToolsButton.tsx 拆出来；面板的外壳、开合与 dock 认领仍在 WallToolsButton。
+
+/** 触屏上没有键盘：行尾那枚键帽（Esc、B、P……）在手机壳里不画。 */
+const kbdOnTouchOnlyPlatform = (): boolean => isIosNative();
 
 /** 面板里的一行：动作（点了默认收起面板）或开关（menuitemcheckbox，点了不收起）。 */
 export type WallToolsEntry =
@@ -236,7 +240,7 @@ export function WallToolsRow({ entry, onDone }: { entry: WallToolsEntry; onDone:
             <Icon aria-hidden="true" />
             <span>{entry.label}</span>
             {entry.value !== undefined && <span className="lattice-tools-value">{entry.value}</span>}
-            {entry.kbd !== undefined && (entry.kbdHidden ? <kbd aria-hidden="true">{entry.kbd}</kbd> : <kbd>{entry.kbd}</kbd>)}
+            {entry.kbd !== undefined && !kbdOnTouchOnlyPlatform() && (entry.kbdHidden ? <kbd aria-hidden="true">{entry.kbd}</kbd> : <kbd>{entry.kbd}</kbd>)}
         </button>
     );
 }

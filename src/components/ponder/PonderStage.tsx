@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useSta
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { usePonderStore } from '../../stores/usePonderStore';
+import { isIosNative } from '../../ios/iosRuntime';
 import { resolveReducedMotion, useMotionSettingsStore } from '../../stores/useMotionSettingsStore';
 import { usePonderSessionKeys } from '../../hooks/usePonderSessionKeys';
 import { compilePonderScene } from '../../utils/ponder/compilePonderTimeline';
@@ -347,7 +348,7 @@ const PonderStage: React.FC<PonderStageProps> = ({ theme, isDaylight }) => {
                         <PonderCaptionBlock
                             sceneIndex={session.sceneIndex}
                             sceneCount={scenes.length}
-                            sceneTitle={t(scene.titleKey)}
+                            sceneTitle={t(isIosNative() ? `${scene.titleKey}Touch` : scene.titleKey)}
                             plan={plan}
                             nodes={nodesRef.current}
                             calm={calm}

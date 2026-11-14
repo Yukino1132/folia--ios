@@ -5,6 +5,7 @@ import { Radio, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { usePlaybackEntryViewStore } from '../../../stores/usePlaybackEntryViewStore';
 import { useThemeSettingsStore } from '../../../stores/useThemeSettingsStore';
+import { IOS_SAFE_TOP_MIN, isIosNative } from '../../../ios/iosRuntime';
 
 // src/components/modal/playback-entry-view/LatticeFmNotice.tsx
 // Explains why Personal FM opened the standard player instead of Lattice.
@@ -21,6 +22,8 @@ export const LatticeFmNotice: React.FC = () => {
     const token = usePlaybackEntryViewStore(state => state.latticeFmNoticeToken);
     const dismiss = usePlaybackEntryViewStore(state => state.dismissLatticeFmNotice);
     const isDaylight = useThemeSettingsStore(state => state.isDaylight);
+    // 它挂在 document.body 上，不在 AppShell 的安全区盒子里：iOS 上要自己让开状态栏，否则被刘海压住。
+    const noticeOffsetY = isIosNative() ? 96 + IOS_SAFE_TOP_MIN : 96;
 
     // Keyed on the token rather than on a boolean, so raising the notice again while it is still
     // on screen restarts the countdown instead of inheriting the tail of the previous one.
@@ -36,7 +39,7 @@ export const LatticeFmNotice: React.FC = () => {
                 <motion.div
                     key={token}
                     initial={{ opacity: 0, y: 60, x: '-50%' }}
-                    animate={{ opacity: 1, y: 96, x: '-50%' }}
+                    animate={{ opacity: 1, y: noticeOffsetY, x: '-50%' }}
                     exit={{ opacity: 0, y: 60, x: '-50%' }}
                     transition={{ type: 'spring', bounce: 0, duration: 0.45 }}
                     className={`fixed top-0 left-1/2 z-[205] flex max-w-[min(92vw,26rem)] items-start gap-3 rounded-2xl px-5 py-3.5 shadow-xl backdrop-blur-md ${isDaylight

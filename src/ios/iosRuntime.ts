@@ -58,6 +58,14 @@ export const getNativePlugin = <T = any>(name: string): T | undefined => {
 export const getIosRuntime = (): FoliaIosBridge => runtime;
 
 /**
+ * iOS 壳顶部的保底留白：原生插件回报安全区之前（以及量到 0 时），内容至少让开这么高，
+ * 否则第一帧的顶栏按钮会压在状态栏下面。iPhone 的刘海区是 47–62px，取下限 44。
+ * 挂在 document.body 上的浮层（不在 AppShell 的盒子里）也要自己加这个量。
+ */
+export const IOS_SAFE_TOP_MIN = 44;
+
+
+/**
  * 在应用启动时调用一次：读取设备信息、写入安全区 CSS 变量、注册媒体事件转发。
  * 非 iOS 环境下是空操作。
  */
@@ -85,7 +93,20 @@ export const bootstrapIosRuntime = async (): Promise<FoliaIosBridge> => {
     } catch (error) {
         console.warn('[ios] 读取设备信息失败，使用默认值', error);
     }
+    // 原生回报之后，把 WebView 的真实视口也记下来：顶栏压状态栏时靠这两组数字分辨
+    // 「安全区没读到」还是「视口本身伸到了状态栏下面」。
+    markViewportMetrics();
     return runtime;
+};
+
+/** 把窗口与可视视口的高度差写进 dataset，供排障时读取（不影响布局）。 */const markViewportMetrics = (): void => {
+    if (typeof document === 'undefined') return;
+    const root = document.documentElement;
+    const viewport = window.visualViewport;
+    root.dataset.foliaInnerHeight = String(Math.round(window.innerHeight));
+    root.dataset.foliaVisualHeight = viewport
+        ? String(Math.round(viewport.height + viewport.offsetTop))
+        : '';
 };
 
 /** 把原生安全区写进 CSS 变量，供布局层读取（env() 在 WKWebView 中对部分弹层不生效）。 */

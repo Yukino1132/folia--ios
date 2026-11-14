@@ -7,6 +7,7 @@ import {
     libraryWallSeamStylePickerSurface,
     libraryWallWindowsPickerSurface,
 } from '../surfaces/libraryWallLookSurface';
+import { isIosNative } from '../../../ios/iosRuntime';
 
 // src/components/command-palette/commands/libraryWallLookCommands.ts
 // bravais 独有设置的命令（settings 组）：透光档位 picker、每块窗数 picker、集合叠页边开关、信息条方向 picker（自动 / 自动（反向）/
@@ -47,7 +48,7 @@ export const libraryWallLookCommands: CommandPaletteCommand[] = [
         isAvailable: isLibraryWallLookCommandAvailable,
         requiresInput: true,
         surface: libraryWallLookPickerSurface,
-        placeholder: context => context.shared.t('commandPalette.pickerFilterPlaceholder', 'Type to filter, then click or press Enter'),
+        placeholder: context => context.shared.t(isIosNative() ? 'commandPalette.pickerFilterPlaceholderTouch' : 'commandPalette.pickerFilterPlaceholder', 'Type to filter, then click or press Enter'),
         execute: () => false,
     }),
     defineCommand({
@@ -60,7 +61,7 @@ export const libraryWallLookCommands: CommandPaletteCommand[] = [
         isAvailable: isLibraryWallWindowsCommandAvailable,
         requiresInput: true,
         surface: libraryWallWindowsPickerSurface,
-        placeholder: context => context.shared.t('commandPalette.pickerFilterPlaceholder', 'Type to filter, then click or press Enter'),
+        placeholder: context => context.shared.t(isIosNative() ? 'commandPalette.pickerFilterPlaceholderTouch' : 'commandPalette.pickerFilterPlaceholder', 'Type to filter, then click or press Enter'),
         execute: () => false,
     }),
     createToggleCommand(
@@ -82,7 +83,7 @@ export const libraryWallLookCommands: CommandPaletteCommand[] = [
         isAvailable: isLibraryWallLookCommandAvailable,
         requiresInput: true,
         surface: libraryWallSeamDirectionPickerSurface,
-        placeholder: context => context.shared.t('commandPalette.pickerFilterPlaceholder', 'Type to filter, then click or press Enter'),
+        placeholder: context => context.shared.t(isIosNative() ? 'commandPalette.pickerFilterPlaceholderTouch' : 'commandPalette.pickerFilterPlaceholder', 'Type to filter, then click or press Enter'),
         execute: () => false,
     }),
     createToggleCommand(
@@ -104,7 +105,7 @@ export const libraryWallLookCommands: CommandPaletteCommand[] = [
         isAvailable: isLibraryWallSeamStyleCommandAvailable,
         requiresInput: true,
         surface: libraryWallSeamStylePickerSurface,
-        placeholder: context => context.shared.t('commandPalette.pickerFilterPlaceholder', 'Type to filter, then click or press Enter'),
+        placeholder: context => context.shared.t(isIosNative() ? 'commandPalette.pickerFilterPlaceholderTouch' : 'commandPalette.pickerFilterPlaceholder', 'Type to filter, then click or press Enter'),
         execute: () => false,
     }),
     createToggleCommand(

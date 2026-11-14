@@ -18,6 +18,7 @@ import { librarySuitePickerSurface } from '../surfaces/librarySuitePickerSurface
 import { libraryWallLookCommands } from './libraryWallLookCommands';
 import { openCurrentPagePonder } from '../../../services/ponder/pagePonderTarget';
 import { copyText } from '../../../utils/system/clipboard';
+import { isIosNative } from '../../../ios/iosRuntime';
 
 // src/components/command-palette/commands/settingsCommands.ts
 // Commands in the `settings` group: settings subviews, app toggles, theme, sync, and desktop-only switches.
@@ -143,7 +144,7 @@ export const settingsCommands: CommandPaletteCommand[] = [
         isAvailable: context => context?.settings.canChooseLibrarySuite() ?? true,
         requiresInput: true,
         surface: librarySuitePickerSurface,
-        placeholder: context => context.shared.t('commandPalette.pickerFilterPlaceholder', 'Type to filter, then click or press Enter'),
+        placeholder: context => context.shared.t(isIosNative() ? 'commandPalette.pickerFilterPlaceholderTouch' : 'commandPalette.pickerFilterPlaceholder', 'Type to filter, then click or press Enter'),
         execute: () => false,
     }),
     // bravais 的透光档位与每块窗数：只在生效 suite 是 bravais 时可用（与设置分区同一个谓词）。

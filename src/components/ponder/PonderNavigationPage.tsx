@@ -4,6 +4,7 @@ import { Search, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useReducedMotionFor } from '../../hooks/useReducedMotionFor';
 import { useSupportsFinePointer } from '../../hooks/useSupportsFinePointer';
+import { isIosNative } from '../../ios/iosRuntime';
 import { usePonderStore } from '../../stores/usePonderStore';
 import { filterPonderIndex, type PonderIndexFilter } from '../../utils/ponder/ponderIndexFilter';
 import { Group } from '../modal/settings/kit';
@@ -69,7 +70,7 @@ const PonderNavigationPage: React.FC<PonderNavigationPageProps> = ({ theme, isDa
         query,
         seen: seenIds,
         // 搜的是屏幕上写着的那两行：标题和那一句话。
-        textOf: target => `${t(target.titleKey)} ${target.summaryKey ? t(target.summaryKey, { mod: ponderModifierLabel }) : ''}`,
+        textOf: target => `${t(target.titleKey)} ${target.summaryKey ? t(isIosNative() ? `${target.summaryKey}Touch` : target.summaryKey, { mod: ponderModifierLabel }) : ''}`,
     });
     const filters: { id: PonderIndexFilter; label: string; count: number; divided?: boolean }[] = [
         { id: 'all', label: t('ponder.navigation.all'), count: lessons.length },

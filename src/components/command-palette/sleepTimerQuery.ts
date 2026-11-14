@@ -1,6 +1,7 @@
 import { parseCommandQuery } from './syntax/parse';
 import { buildFlagSuggestions } from './syntax/suggest';
 import type { CommandSyntaxSpec } from './syntax/types';
+import { isIosNative } from '../../ios/iosRuntime';
 
 // src/components/command-palette/sleepTimerQuery.ts
 // Parses and validates the sleep timer's one-shot `--on` / `--off` command input.
@@ -98,7 +99,7 @@ export const describeSleepTimerQuery = (
         if (result.action === 'disable') {
             return {
                 isError: false,
-                text: t('commandPalette.sleepTimerOffPreview', 'Press Enter to cancel the sleep timer'),
+                text: t(isIosNative() ? 'commandPalette.sleepTimerOffPreviewTouch' : 'commandPalette.sleepTimerOffPreview', 'Press Enter to cancel the sleep timer'),
             };
         }
         return {

@@ -2,6 +2,7 @@ import React from 'react';
 import { Check, ChevronRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import type { PonderTargetDefinition } from '../../types/ponder';
+import { isIosNative } from '../../ios/iosRuntime';
 import { ponderModifierLabel } from './PonderKeyCap';
 
 // src/components/ponder/PonderLessonRow.tsx
@@ -34,7 +35,7 @@ const PonderLessonRow: React.FC<PonderLessonRowProps> = ({ target, seen, onOpen 
                 {target.summaryKey && (
                     <span className="mt-0.5 block text-xs leading-[18px] text-[color:var(--st-t2)]">
                         {/* The same interpolation as a caption: {{mod}} is Ctrl or Cmd by platform. */}
-                        {t(target.summaryKey, { mod: ponderModifierLabel })}
+                        {t(isIosNative() ? `${target.summaryKey}Touch` : target.summaryKey, { mod: ponderModifierLabel })}
                     </span>
                 )}
             </span>

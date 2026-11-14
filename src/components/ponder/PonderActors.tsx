@@ -2,6 +2,7 @@ import React from 'react';
 import { anchorPointToPx } from '../../utils/ponder/resolvePonderAnchors';
 import type { PonderStageScreen } from '../../utils/ponder/ponderStageLayout';
 import type { PonderAnchorSource, PonderRect, PonderTimelinePlan } from '../../types/ponder';
+import { isIosNative } from '../../ios/iosRuntime';
 import type { PonderStageNodes } from './ponderStageNodes';
 import PonderFocusFrame from './PonderFocusFrame';
 import { PonderKeyCombo } from './PonderKeyCap';
@@ -27,13 +28,16 @@ type PonderActorsProps = {
 
 const PonderActors: React.FC<PonderActorsProps> = ({ plan, rects, anchors, nodes, screen }) => {
     const keypressSteps = plan.entries.filter(entry => entry.step.kind === 'keypress');
+    // 触屏上没有键盘：按键胶片（Mod K、Esc 之类）在手机上只会让人去找一个不存在的键。
+    // 节点照旧登记，时间线按 step.id 找不到可见元素时是安全的空操作。
+    const showKeyPresses = !isIosNative();
 
     return (
         // z-40：压在骨架之上。整层 pointer-events-none，不挡任何点击。
         <div className="pointer-events-none absolute inset-0 z-40" aria-hidden="true">
             <PonderFocusFrame plan={plan} rects={rects} anchors={anchors} nodes={nodes} screen={screen} />
 
-            {keypressSteps.map(({ step }) => {
+            {showKeyPresses && keypressSteps.map(({ step }) => {
                 if (step.kind !== 'keypress') return null;
                 const point = step.at === 'bottom'
                     ? { x: screen.left + screen.width / 2, y: screen.top + screen.height - BOTTOM_KEYS_INSET_PX }

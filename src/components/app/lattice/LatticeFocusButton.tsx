@@ -5,6 +5,7 @@ import { usePlaybackStore } from '../../../stores/usePlaybackStore';
 import { usePlayingSongLocatorStore } from '../../../stores/usePlayingSongLocatorStore';
 import { getPlaybackSongKey } from '../../../utils/appPlaybackGuards';
 import { PRIMARY_MODIFIER_LABEL } from '../../../utils/platform';
+import { isIosNative } from '../../../ios/iosRuntime';
 import WallToolsButton from '../../wall/WallToolsButton';
 import type { WallToolsQuickAction } from '../../wall/WallToolsRows';
 import { GridLocateButton } from '../playing-song-locator/GridLocateButton';
@@ -30,6 +31,8 @@ export default function LatticeFocusButton({ isDaylight, tiles, onGoHome }: { is
     const isPlayingSongHere = useMemo(() => (
         playingSongKey !== null && tiles.some(tile => tile.id === playingSongKey)
     ), [playingSongKey, tiles]);
+    // 触屏上没有 Esc / S / Ctrl+B 可读：帮助面板换一份只有手势与触摸的说明。
+    const touch = isIosNative();
 
     const destination: WallToolsQuickAction | undefined = onGoHome ? {
         id: 'go-home',
@@ -63,7 +66,13 @@ export default function LatticeFocusButton({ isDaylight, tiles, onGoHome }: { is
                     onLocate={locatePlayingSongOnWall}
                 />
             ) : undefined}
-            help={(
+            help={touch ? (
+                <>
+                    <li><span>{t('home.latticeHelpTouchPoster')}</span></li>
+                    <li><span>{t('home.latticeBackTouch')}</span></li>
+                    <li><span>{t('help.touchControlsNote')}</span></li>
+                </>
+            ) : (
                 <>
                     <li>
                         <span>{t('home.latticeHelpPoster')}</span>

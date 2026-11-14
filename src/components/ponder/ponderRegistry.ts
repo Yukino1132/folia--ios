@@ -1,4 +1,5 @@
 import { PONDER_TARGET_CATEGORIES, type PonderTargetCategory, type PonderTargetDefinition, type PonderTargetId } from '../../types/ponder';
+import { isIosNative } from '../../ios/iosRuntime';
 
 // src/components/ponder/ponderRegistry.ts
 // 可教学目标的注册表。照 dev/probes/registry.ts 和 visualizer registry 的做法：
@@ -66,9 +67,13 @@ export const findPonderTarget = (id: PonderTargetId): PonderTargetDefinition | n
  *
  * 从注册表算出来而不是手写一张表：手写的表和注册表必然走散，新加的目标会静悄悄地
  * 不出现在导航页上 —— 而「找不到某个组件的教程」这件事本来就没有任何东西会报警。
+ *
+ * 触屏上没有键盘，`desktop` 那一类（壁纸、托盘、远程遥控）手机上也根本没有 ——
+ * 这两类在手机壳里不列出来，点开了也只会看见一个不存在的窗口。
  */
 export const ponderTargetsByCategory = (): { category: PonderTargetCategory; targets: PonderTargetDefinition[] }[] => (
     PONDER_TARGET_CATEGORIES
+        .filter(category => !(isIosNative() && category === 'desktop'))
         .map(category => ({
             category,
             targets: PONDER_TARGET_LIST.filter(target => target.category === category),
