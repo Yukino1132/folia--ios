@@ -16,6 +16,7 @@ import { useWallPointerPan } from '../../wall/useWallPointerPan';
 import { formatWorldTransform } from '../../wall/wallView';
 import type { LatticeTile } from './latticeModel';
 import LatticePoster from './LatticePoster';
+import { clampRenderPixelRatio } from '../../../ios/iosPerformance';
 import LatticeHeading from './LatticeHeading';
 import LatticeSectionFinder from './LatticeSectionFinder';
 import { useWallSections } from './useWallSections';
@@ -131,7 +132,9 @@ export default function PosterWall({
     const entranceSuppressed = useWallHandoffStore(state => resolveWallHandoffRole(state.session, 'lattice') === 'in');
     const autoFocusOnSongChange = useLatticeSettingsStore(state => state.autoFocusOnSongChange);
     const devicePixelRatio = useDevicePixelRatio();
-    const pixelScale = cameraScale * devicePixelRatio;
+    // 海报墙按 cameraScale × dpr 铺位图：手机上 3x 再叠相机放大会让每张封面都超采样，
+    // 原生壳里把 dpr 压到 1.5 上限（桌面端不变）。
+    const pixelScale = cameraScale * clampRenderPixelRatio(devicePixelRatio);
 
     const wallLayout = useMemo(
         () => (sections ? createExploreLayout(sections, METRICS) : createQueueLayout(tiles.length, METRICS)),

@@ -1,6 +1,7 @@
 import type { OnlineFailureCaseId } from '../../../types/onlineMusic';
 import { omni } from '../omni';
 import type { OnlineFailure } from './onlineFailureCase';
+import { isIosNative } from '../../../ios/iosRuntime';
 
 // src/services/onlineMusic/failure/onlineFailureTexts.ts
 // 一次失败给用的人看的三部分：标题（发生了什么，带平台的名字）、该做什么、平台的原话。每一种情况的标题和
@@ -58,6 +59,10 @@ const MEDIA_ERROR_NAMES: Record<string, string> = {
     4: 'MEDIA_ERR_SRC_NOT_SUPPORTED',
 };
 
+// 原生壳里「未配置」不是终局：中转地址可以在设置里填，所以标题与「该做什么」换成能照着做的那两句。
+// 桌面版点不出这种失败；网页版没有设置页，仍用原来那句。
+const NOT_CONFIGURED_MOBILE: { title: string; bare?: string; note: string; bareNote?: string } = { title: 'failure.notConfiguredMobile', note: 'failure.noteNotConfiguredMobile' };
+
 /**
  * 引的话：平台的原话，带着它的码；只有码就引码；都没有而知道 HTTP 状态码就引它；什么都没有就不引。
  * 媒体元素的失败引的是 MediaError 的码和它的名字，浏览器自己的那句话只进日志。
@@ -79,7 +84,7 @@ export const onlineFailureMessage = (shown: OnlineFailure, t: Translate): { titl
         : undefined;
     const texts = signInFirst
         ? SIGNED_OUT
-        : seconds !== undefined ? WAIT_TITLE : TEXTS[shown.case];
+        : seconds !== undefined ? WAIT_TITLE : (shown.case === 'not-configured' && isIosNative() ? NOT_CONFIGURED_MOBILE : TEXTS[shown.case]);
     const failed = shown.operation === 'collection' ? 'playlist.loadFailedPlain' : 'status.playbackFailed';
     const provider = shown.providerId ? omni.getProviderLabel(shown.providerId) : undefined;
     const values = seconds === undefined ? undefined : { seconds };

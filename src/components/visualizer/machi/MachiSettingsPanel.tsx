@@ -48,6 +48,7 @@ import {
     type MachiTuning,
     type MachiWeather,
 } from './types';
+import { isIosNative } from '../../../ios/iosRuntime';
 
 // src/components/visualizer/machi/MachiSettingsPanel.tsx
 // 町景的设置面板：场景（线稿小图，不放实时预览）、时间、天气三项，每项都有“自动”；灯光（模拟节拍：没开智能动感模式时
@@ -231,7 +232,7 @@ const MachiSettingsPanel: React.FC<VisualizerSettingsPanelProps<MachiTuning>> = 
                     </Button>
                 ) : undefined}
             >
-                <Row label={t('options.machiCameraMode')} note={t('options.machiCameraModeHint')}>
+                <Row label={t('options.machiCameraMode')} note={t(isIosNative() ? 'options.machiCameraModeHintTouch' : 'options.machiCameraModeHint')}>
                     <Segmented<MachiCameraMode>
                         value={tuning.camera}
                         options={MACHI_CAMERA_MODES.map(mode => ({ value: mode, label: t(MACHI_CAMERA_LABEL_KEYS[mode]) }))}

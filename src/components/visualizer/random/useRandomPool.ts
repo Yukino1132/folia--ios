@@ -7,6 +7,7 @@ import { useVisualizerSettingsStore } from '../../../stores/useVisualizerSetting
 import { setStatusMessage } from '../../../stores/useStatusMessageStore';
 import { pickRandomVisualizerMode } from '../../../utils/randomVisualizerModes';
 import { getVisualizerModeLabel, VISUALIZER_REGISTRY } from '../registry';
+import { isHeavyVisualizerOnMobile } from '../../../ios/iosPerformance';
 
 // src/components/visualizer/random/useRandomPool.ts
 // The random pool as its two pickers show it (the lyric style window's page and the player panel's
@@ -23,12 +24,19 @@ export const useRandomPool = () => {
         setModes: state.handleSetRandomVisualizerModes,
         setMode: state.handleSetVisualizerMode,
     })));
+    // 手机上从池子里去掉 3D 场景与重着色器那几档（见 ios/iosPerformance.ts）：每首换一次，
+    // 换歌时重新编译着色器再铺满屏，iPhone 扛不住。桌面端 options 与之前逐字一致。
     const options = useMemo(() => (
         VISUALIZER_REGISTRY
-            .filter(entry => BUILTIN_MODES.has(entry.mode))
+            .filter(entry => BUILTIN_MODES.has(entry.mode) && !isHeavyVisualizerOnMobile(entry.mode))
             .map(entry => ({ value: entry.mode, label: getVisualizerModeLabel(entry.mode, t) }))
     ), [t]);
-    const allOn = modes.length === BUILTIN_VISUALIZER_MODES.length;
+    // 「全选」在手机上只选剩下的那些，计数也跟着走同一个池子。
+    const poolModes = useMemo<readonly VisualizerMode[]>(
+        () => options.map(option => option.value as VisualizerMode),
+        [options],
+    );
+    const allOn = modes.length === poolModes.length;
 
     return {
         options,
@@ -42,10 +50,10 @@ export const useRandomPool = () => {
          */
         selectAll: (grid?: HTMLElement | null) => {
             grid?.querySelector<HTMLElement>('[data-value][tabindex="0"]')?.focus();
-            setModes(BUILTIN_VISUALIZER_MODES);
+            setModes(poolModes);
         },
         /** 「已选 5/14」 */
-        countLabel: t('options.randomPoolCount', { selected: modes.length, total: BUILTIN_VISUALIZER_MODES.length }),
+        countLabel: t('options.randomPoolCount', { selected: modes.length, total: poolModes.length }),
         /** The style this song drew. */
         currentLabel: getVisualizerModeLabel(mode, t),
         /** Said when the last style that is on is pressed: the pool keeps one at least. */

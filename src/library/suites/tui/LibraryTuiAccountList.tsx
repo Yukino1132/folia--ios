@@ -10,6 +10,7 @@ import { providerDisplayName } from '../../../i18n/providerName';
 import { colorWithAlpha } from '../../../components/visualizer/colorMix';
 import { openLoginWindow } from '../../../components/login/loginWindowStore';
 import { useLibraryTuiAccountListKeys } from './useLibraryTuiHomeKeyboard';
+import { isIosNative } from '../../../ios/iosRuntime';
 
 // src/library/suites/tui/LibraryTuiAccountList.tsx
 // TUI 首页在线页签的平台列表（account-select / account-logout）：每个在线平台一行——当前标记、名称、账户状态
@@ -82,7 +83,11 @@ const LibraryTuiAccountList: React.FC<LibraryTuiAccountListProps> = ({ account, 
     });
 
     const accentBackground = colorWithAlpha(accentColor, isDaylight ? 0.16 : 0.22);
-    const hints = onClose ? t('libraryTui.accountsHints') : t('libraryTui.accountsGuestHints');
+    // 触屏上没有方向键与 Del：原生壳里换成三种「点一下」的说法（*Touch 后缀）。
+    const touch = isIosNative();
+    const hints = onClose
+        ? t(touch ? 'libraryTui.accountsHintsTouch' : 'libraryTui.accountsHints')
+        : t(touch ? 'libraryTui.accountsGuestHintsTouch' : 'libraryTui.accountsGuestHints');
 
     return (
         <div className="flex min-h-0 flex-1 flex-col" data-tui-accounts={onClose ? 'panel' : 'guest'}>

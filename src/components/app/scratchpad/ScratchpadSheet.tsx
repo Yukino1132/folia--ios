@@ -21,6 +21,7 @@ import {
     type PaperMotion,
 } from './scratchpadPaper';
 import { PRIMARY_MODIFIER_LABEL } from '../../../utils/platform';
+import { isIosNative } from '../../../ios/iosRuntime';
 
 // src/components/app/scratchpad/ScratchpadSheet.tsx
 // 展开整页（设计稿 F 定稿）：整张纸向右下转 4°（设计稿 6°，用户嫌斜，2026-11-06 改小；降低动态效果时不转，同歌手页），这一页的米白信息条横贯整张纸，
@@ -452,7 +453,7 @@ const ScratchpadSheet: React.FC<ScratchpadSheetProps> = ({
                     role="note"
                     exit={{ opacity: 0, transition: { duration: 0.12 } }}
                 >
-                    {t('scratchpad.overviewHelp', { mod: PRIMARY_MODIFIER_LABEL })}
+                    {t(isIosNative() ? 'scratchpad.overviewHelpTouch' : 'scratchpad.overviewHelp', { mod: PRIMARY_MODIFIER_LABEL })}
                 </motion.p>
             )}
         </div>

@@ -16,6 +16,7 @@ import { PRIMARY_MODIFIER_LABEL } from '../../../utils/platform';
 import { LibraryTuiLocalList, LibraryTuiNavidromeList, LibraryTuiOnlineList } from './LibraryTuiHomeLists';
 import type { LibraryTuiPromptRequest } from './LibraryTuiPrompt';
 import { useLibraryTuiHomePageKeys } from './useLibraryTuiHomeKeyboard';
+import { isIosNative } from '../../../ios/iosRuntime';
 
 // src/library/suites/tui/LibraryTuiHome.tsx
 // 首页 surface 的 TUI 实现（开发版）：顶上两行等宽的页签——来源（在线 / 本地 / Navidrome，可用性与不可用原因来自
@@ -257,11 +258,15 @@ const LibraryTuiHome: React.FC<LibraryHomeSurfaceProps> = (props) => {
                 />
             )}
 
+            {/* 触屏上没有键盘：原生壳里换手势说法（homeHintsTouch / homeTreeHintsTouch），
+                批量选择真机上只能靠长按进入，所以 homeBatchHints 那一段不画。 */}
             <footer className="shrink-0 border-t border-current/10 px-4 py-1.5 text-[11px] opacity-50" data-tui-home-hints>
-                {t('libraryTui.homeHints')}
-                {` · ${t('libraryTui.homeAccountsHint')}`}
-                {activeSource === 'local' && localSectionKey === 'folders' ? ` · ${t('libraryTui.homeTreeHints')}` : ''}
-                {showBatchHints ? ` · ${t('libraryTui.homeBatchHints', { mod: PRIMARY_MODIFIER_LABEL })}` : ''}
+                {t(isIosNative() ? 'libraryTui.homeHintsTouch' : 'libraryTui.homeHints')}
+                {` · ${t(isIosNative() ? 'libraryTui.homeAccountsHintTouch' : 'libraryTui.homeAccountsHint')}`}
+                {activeSource === 'local' && localSectionKey === 'folders'
+                    ? ` · ${t(isIosNative() ? 'libraryTui.homeTreeHintsTouch' : 'libraryTui.homeTreeHints')}`
+                    : ''}
+                {showBatchHints && !isIosNative() ? ` · ${t('libraryTui.homeBatchHints', { mod: PRIMARY_MODIFIER_LABEL })}` : ''}
             </footer>
         </div>
     );

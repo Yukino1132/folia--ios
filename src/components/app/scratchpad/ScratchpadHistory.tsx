@@ -21,6 +21,7 @@ import { PHOTO_SPACING } from './canvasLayout';
 import type { ScratchpadPlayback } from './ScratchpadHost';
 import { SCRATCHPAD_TILT_DEG } from './scratchpadTilt';
 import ScratchpadShape from './ScratchpadShape';
+import { isIosNative } from '../../../ios/iosRuntime';
 
 // src/components/app/scratchpad/ScratchpadHistory.tsx
 // 速记簿的第二页：播放历史。最近七天在这台设备上放过的歌（Folia 自己的播放记录 recentPlays：在线平台、本地、
@@ -206,7 +207,7 @@ const ScratchpadHistory: React.FC<ScratchpadHistoryProps> = ({ playback, expande
         return (
             <>
                 <ScratchpadBandActions>
-                    <span className="scratchpad-band-note">{t('scratchpad.historyBandHint')}</span>
+                    <span className="scratchpad-band-note">{t(isIosNative() ? 'scratchpad.historyBandHintTouch' : 'scratchpad.historyBandHint')}</span>
                 </ScratchpadBandActions>
                 <ScratchpadCanvas
                     groups={canvasGroups}

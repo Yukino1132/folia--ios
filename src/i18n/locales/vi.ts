@@ -203,7 +203,14 @@ export default {
         "v3": "Thư giãn",
         "v4": "Giờ yên tĩnh"
       }
-    }
+    },
+    "historyBandHintTouch": "Theo thời gian · không thể sắp xếp lại · chạm để phát",
+    "tipPlayKeyTouch": "Chạm",
+    "tipDeleteKeyTouch": "Nhấn giữ",
+    "tipEscKeyTouch": "Chạm chỗ trống",
+    "tipAddKeyTouch": "Nhấn giữ bài khác",
+    "overviewHelpTouch": "Kéo ở chỗ trống để chọn khung (qua nhiều hàng), nhấn giữ bài khác để thêm; chạm để phát; dùng “Toàn trang” trên dải để xem tất cả và sắp xếp lại",
+    "tipEscTouch": "bỏ chọn",
   },
   "libraryBravais": {
     "suiteName": "Không gian Bravais",
@@ -399,7 +406,17 @@ export default {
     "bioMore": "xem thêm",
     "bioLess": "thu gọn",
     "columnYear": "Năm",
-    "artistHints": "↑↓ di chuyển · Tab bài hát/album · Enter phát/mở · Shift+Enter thêm hàng đợi · {{mod}}+Enter phát tất cả · {{mod}}+Shift+Enter thêm bài nổi bật vào hàng đợi · Esc quay lại"
+    "artistHints": "↑↓ di chuyển · Tab bài hát/album · Enter phát/mở · Shift+Enter thêm hàng đợi · {{mod}}+Enter phát tất cả · {{mod}}+Shift+Enter thêm bài nổi bật vào hàng đợi · Esc quay lại",
+    "hintsTouch": "Chạm bài hát để phát · chạm mũi tên để vào hàng đợi · chạm tiêu đề cột để sắp xếp · chạm phần trên để quay lại",
+    "hintOpenLinksTouch": "Chạm bìa để mở album · chạm tên nghệ sĩ để mở nghệ sĩ",
+    "hintRemoveTouch": "Nhấn giữ để xóa",
+    "hintDislikeTouch": "Nhấn giữ để không thích",
+    "homeHintsTouch": "Chạm một mục để mở · vuốt ngang để đổi mục · chạm phần trên để quay lại · chạm góc để lọc",
+    "homeTreeHintsTouch": "Chạm tam giác để mở hoặc thu gọn",
+    "accountsHintsTouch": "Chạm một nền tảng để đổi hoặc đăng nhập · chạm phần trên để đóng",
+    "accountsGuestHintsTouch": "Chạm một nền tảng để đăng nhập",
+    "homeAccountsHintTouch": "Chạm góc để đổi nền tảng",
+    "artistHintsTouch": "Chạm bài hát để phát · chạm mũi tên để vào hàng đợi · vuốt ngang cho bài hát/album · chạm phần trên để quay lại",
   },
   "libraryBravaisCollection": {
     "matchCount": "{{matches}} / {{total}}",
@@ -597,6 +614,8 @@ export default {
     "songRegionRestricted": "Chỉ phát tại Trung Quốc đại lục. Kiểm tra kết nối mạng.",
     "songRetrying": "Kết nối thất bại. Đang thử lại…",
     "songServiceNotConfigured": "Nguồn nhạc này chưa được cấu hình hoặc cần ứng dụng máy tính để phát.",
+    "notConfiguredMobile": "Nguồn này chưa có relay",
+    "noteNotConfiguredMobile": "Mở Cài đặt → Kết nối rồi nhập địa chỉ relay của bạn, hoặc dùng Kugou hay QQ vốn không cần relay.",
     "songRateLimited": "Yêu cầu quá nhanh. Vui lòng thử lại sau {{seconds}}s.",
     "songLoginRequired": "Vui lòng đăng nhập để phát bài hát này.",
     "songPurchaseRequired": "Bài hát này yêu cầu mua album hoặc đĩa đơn trước khi phát.",
@@ -2048,7 +2067,8 @@ export default {
     "dailyStyleSaveFailed": "Không chuyển được sang các phong cách này. Vui lòng thử lại sau",
     "dislikeRecommendationFailed": "Không thể đổi gợi ý này. Hãy thử lại sau.",
     "removeTrackFailed": "Gỡ bài hát thất bại",
-    "stage": "Sân khấu"
+    "stage": "Sân khấu",
+    "latticeBackTouch": "Nút góc trên bên trái để quay lại. Chạm áp phích để mở rộng và chạm lần nữa để thu lại; vuốt từ mép trái cũng quay lại.",
   },
   "animation": {
     "calm": "Êm dịu",
@@ -2095,7 +2115,10 @@ export default {
     "servicePackLabel": "Cập nhật {{codename}} SP{{servicePack}} · Bản cập nhật lớn",
     "ponder": "Trợ giúp Khám phá",
     "ponderDescription": "Tìm hiểu thao tác cơ bản và cơ chế vận hành của Folia",
-    "version": "phiên bản"
+    "version": "phiên bản",
+    "touchHeading": "Cử chỉ và cảm ứng",
+    "touchControls": "Cách dùng trên điện thoại",
+    "touchControlsNote": "Chạm vào thẻ đang phát để mở trình phát, chụm hai ngón để xem hàng đợi, vuốt từ mép trái để quay lại; hướng dẫn có đủ các cử chỉ.",
   },
   "qishui": { "recentPlayed": "Gần đây đã phát trên Qishui", "recommended": "Được đề xuất cho bạn" },
   "listeningRank": {
@@ -2325,6 +2348,8 @@ export default {
     "randomPoolCount": "Đã chọn {{selected}}/{{total}}",
     "randomPoolDesc": "Mỗi bài hát sẽ chuyển sang một trong các phong cách đã chọn, áp dụng thiết lập đã lưu của riêng phong cách đó.",
     "randomPoolChoose": "Chọn kho ngẫu nhiên",
+    "randomPoolMobileNote": "Kiểu 3D và shader nặng không vào vòng ngẫu nhiên trên điện thoại: dựng lại mỗi bài sẽ phá khung hình. Muốn xem thì chọn tay.",
+    "iosHeavyVisualizerNotice": "Kiểu này khá nặng trên điện thoại; đổi sang kiểu nhẹ hơn nếu bị giật.",
     "ponderHints": "Gợi ý Khám phá",
     "ponderHintsDesc": "Rê chuột vào nút hỗ trợ sẽ hiển thị gợi ý giữ G để mở hướng dẫn cử chỉ động.",
     "ponderHintsAlways": "Luôn hiển thị",
@@ -3917,6 +3942,14 @@ export default {
     "scanningFolder": "Đang quét {{folderName}}",
     "lyricFilterUpdated": "Đã cập nhật quy tắc lọc lời bài hát",
     "neteaseScrobble": "Báo cáo lượt nghe (chỉ NetEase)",
+    "neteaseRelay": "Địa chỉ relay Netease",
+    "neteaseRelayDesc": "Trên điện thoại không có backend sẵn; nhập địa chỉ dịch vụ API Netease của bạn để dùng được.",
+    "neteaseRelayInUseOwn": "Đang dùng địa chỉ bạn nhập.",
+    "neteaseRelayInUseBuiltIn": "Đang dùng địa chỉ đóng gói sẵn.",
+    "neteaseRelayMissing": "Chưa có địa chỉ nên chưa dùng được Netease.",
+    "neteaseRelayMissingStatus": "Có hiệu lực ngay sau khi lưu, không cần cài lại.",
+    "neteaseRelaySave": "Lưu",
+    "neteaseRelayClear": "Xoá",
     "neteaseScrobbleDesc": "Gửi báo cáo nghe tới tài khoản NetEase sau khi nghe thực tế tối thiểu 30 giây nhạc NetEase trực tuyến. Tệp nội bộ, nhạc tải lên đám mây và nguồn khác sẽ không ghi nhận. Tính năng này tiềm ẩn rủi ro - hãy thận trọng.",
     "neteaseScrobbleSignInHint": "Đăng nhập NetEase Cloud Music để sử dụng.",
     "queueDefaultBehavior": "Vị trí mặc định khi thêm vào hàng đợi",
@@ -3948,6 +3981,9 @@ export default {
     "autoAiLyricSegmentationDesc": "Khi phát bài có lời tiếng Trung hoặc tiếng Nhật chưa lưu cách tách từ, tự động dùng AI tách lời thành từ. Chỉ ảnh hưởng các kiểu lời sắp chữ theo từ. Chạy một lần cho mỗi bài và tốn yêu cầu AI.",
     "visualizerMode": "Chế độ",
     "noDescription": "Chưa có mô tả",
+    "scratchpadShowHandleDescTouch": "Tab ở mép trái cửa sổ. Khi ẩn đi, bảng lệnh vẫn mở được sổ ghi.",
+    "alwaysShowTrackSwitchButtonsDescTouch": "Giữ mũi tên bài trước/bài sau ở hai bên tiêu đề thanh tiến trình luôn hiện.",
+    "machiCameraModeHintTouch": "Kéo hình để xoay góc nhìn, chụm hai ngón để thu phóng, kéo bằng hai ngón để dịch. Góc nhìn mặc định: khoảng 8 giây sau khi thả tay sẽ trở về bố cục mặc định. Góc nhìn tùy chỉnh: dừng ở chỗ bạn để lại và được ghi nhớ, mỗi cảnh một kiểu; thanh trượt bên dưới cũng chỉnh được.",
   },
   "releaseNotes": {
     "v0_7_0": {
@@ -4613,6 +4649,7 @@ export default {
     "slotSuggestionReplaceSecondary": "Thay nút bên phải ({{action}})",
     "capsuleQuickActions": "Thao tác nhanh",
     "capsuleOpensPalette": "Nhấp để mở bảng lệnh",
+    "slotCustomizeHintTouch": "Nhấn giữ để thay đổi",
   },
   "localMusic": {
     "foldersAndPlaylists": "Thư mục",

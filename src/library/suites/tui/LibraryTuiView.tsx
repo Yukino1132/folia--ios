@@ -25,6 +25,7 @@ import LibraryTuiRow, { LIBRARY_TUI_COLUMNS, LIBRARY_TUI_ROW_HEIGHT, type Librar
 import LibraryTuiPrompt, { type LibraryTuiPromptRequest } from './LibraryTuiPrompt';
 import { useLibraryTuiFocus } from './useLibraryTuiFocus';
 import { useLibraryTuiKeyboard } from './useLibraryTuiKeyboard';
+import { isIosNative } from '../../../ios/iosRuntime';
 
 // src/library/suites/tui/LibraryTuiView.tsx
 // 集合详情的第二个 renderer：终端风格的等宽列表。它只做展示和按键映射——曲目、筛选、排序、
@@ -355,10 +356,11 @@ const LibraryTuiView: React.FC<LibraryCollectionSurfaceProps> = ({
                     onCancel={() => setPrompt(null)}
                 />
             )}
+            {/* 触屏上没有键盘：原生壳里这一行换成手势说法（libraryTui.hintsTouch），桌面上仍是键位。 */}
             <footer className="shrink-0 border-t border-current/10 px-4 py-1.5 text-[11px] opacity-50">
-                {t('libraryTui.hints', { mod: PRIMARY_MODIFIER_LABEL })}
-                {canRemoveEntry && ` · ${t(isDailyRecommendations ? 'libraryTui.hintDislike' : 'libraryTui.hintRemove')}`}
-                {(canOpenAlbum || canOpenArtist) && ` · ${t('libraryTui.hintOpenLinks')}`}
+                {t(isIosNative() ? 'libraryTui.hintsTouch' : 'libraryTui.hints', { mod: PRIMARY_MODIFIER_LABEL })}
+                {canRemoveEntry && ` · ${t(isIosNative() ? (isDailyRecommendations ? 'libraryTui.hintDislikeTouch' : 'libraryTui.hintRemoveTouch') : (isDailyRecommendations ? 'libraryTui.hintDislike' : 'libraryTui.hintRemove'))}`}
+                {(canOpenAlbum || canOpenArtist) && ` · ${t(isIosNative() ? 'libraryTui.hintOpenLinksTouch' : 'libraryTui.hintOpenLinks')}`}
             </footer>
         </div>
     );

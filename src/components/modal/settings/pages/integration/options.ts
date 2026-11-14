@@ -19,6 +19,7 @@ export const O = {
     syncToken: option(SERVICES, 'r2SyncToken', 'options.r2SyncToken'),
     discord: option(SERVICES, 'discordRichPresence', 'options.discordRichPresence', { electronOnly: true }),
     scrobble: option(SERVICES, 'scrobbleSettings', 'options.neteaseScrobble'),
+    neteaseRelay: option(SERVICES, 'neteaseRelay', 'options.neteaseRelay'),
     transparentBackground: option(STREAMING, 'transparentPlayerBackground', 'options.transparentPlayerBackground'),
     obs: option(STREAMING, 'obsBrowserSource', 'options.obsBrowserSource', { electronOnly: true }),
     obsKeepAnimation: option(STREAMING, 'obsKeepMainWindowAnimation', 'options.obsKeepMainWindowAnimation', { electronOnly: true }),

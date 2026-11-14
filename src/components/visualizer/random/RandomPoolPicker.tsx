@@ -4,6 +4,7 @@ import { Button, PictureChecks, Popover } from '../../modal/settings/kit';
 import { PickerMoreButton } from '../../panelTab/QuickEffectPicker';
 import { drawRandomPoolChoice } from './lyricStyleChoices';
 import { useRandomPool } from './useRandomPool';
+import { randomPoolMobileNoteKey } from './randomPoolNote';
 
 // src/components/visualizer/random/RandomPoolPicker.tsx
 // The layer the player panel's 「选择随机池」 chip opens: the random pool laid out as the panel's
@@ -25,6 +26,8 @@ const RandomPoolPicker: React.FC<RandomPoolPickerProps> = ({ anchorRef, open, on
     const { t } = useTranslation();
     const pool = useRandomPool();
     const gridRef = useRef<HTMLDivElement>(null);
+    // iOS 壳里池子少了重型样式，池子上方那行说明只在原生壳出现（randomPoolNote.ts）。
+    const mobileNote = randomPoolMobileNoteKey();
 
     return (
         <Popover anchorRef={anchorRef} open={open} onClose={onClose} fill aria-label={t('options.randomPool')} className="flex flex-col rounded-[14px] pb-1 pt-2">
@@ -35,6 +38,9 @@ const RandomPoolPicker: React.FC<RandomPoolPickerProps> = ({ anchorRef, open, on
                     <Button variant="quiet" disabled={pool.allOn} onClick={() => pool.selectAll(gridRef.current)}>{t('options.randomVisualizerSelectAll')}</Button>
                 </span>
             </div>
+            {mobileNote && (
+                <p className="mb-1 shrink-0 px-4 text-[11px] leading-4 text-[color:var(--st-t3)]">{t(mobileNote)}</p>
+            )}
             {/* min-h-0: where the window is short, the grid is what scrolls (Popover). */}
             <div ref={gridRef} className="flex min-h-0 flex-col">
                 <PictureChecks

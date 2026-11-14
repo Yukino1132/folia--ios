@@ -4,6 +4,7 @@ import type { SongResult } from '../../../types';
 import { omni } from '../../../services/onlineMusic/omni';
 import { getPlaybackSourceRef } from '../../../utils/appPlaybackGuards';
 import { canOpenPlaylistPickerFor } from '../../../stores/useAddToPlaylistStore';
+import { isIosNative } from '../../../ios/iosRuntime';
 
 // src/components/app/scratchpad/scratchpadModel.ts
 // 列表与画布共用的小判断：一首歌的来源怎么称呼、它所在的组能不能进歌单；以及按钮的描述（组头、行内、浮动菜单都用它）。
@@ -30,16 +31,26 @@ export type ScratchpadAction = {
     title?: string;
 };
 
-/** 展开整页右边那一列的操作提示：每页四条（拖空白框选、Ctrl + 点加选，再加这一页能做的两件事）。 */
+/** 展开整页右边那一列的操作提示：每页四条（拖空白框选、加选，再加这一页能做的两件事）。
+ *  原生壳里同一个动作是「点 / 长按」而不是「双击 / Delete / Esc」，所以每组键名带 Touch 变体。 */
 export const scratchpadTips = (
     tab: 'notes' | 'history' | 'queue',
     t: TFunction,
     modifier: string,
     canReorder = true,
 ): { key: string; label: string }[] => {
-    const tip = (key: string, label: string) => ({ key: t(`scratchpad.${key}`, { mod: modifier }), label: t(`scratchpad.${label}`) });
+    const touch = isIosNative();
+    const tip = (key: string, label: string) => ({
+        key: t(`scratchpad.${touch && hasTouchTip(key) ? `${key}Touch` : key}`, { mod: modifier }),
+        label: t(`scratchpad.${label}`),
+    });
     const common = [tip('tipMarqueeKey', 'tipMarquee'), tip('tipAddKey', 'tipAdd')];
     if (tab === 'notes') return [...common, tip('tipReorderKey', 'tipReorderGroup'), tip('tipEscKey', 'tipEsc')];
     if (tab === 'history') return [...common, tip('tipPlayKey', 'tipPlay'), tip('tipDeleteKey', 'tipDelete')];
     return [...common, ...(canReorder ? [tip('tipReorderKey', 'tipReorder')] : []), tip('tipPlayKey', 'tipPlay')];
 };
+
+/** 只有这几条键位提示在原生壳里有触屏说法（拖卡片在两边都是拖，不用换）。 */
+const TOUCH_TIP_KEYS = new Set(['tipPlayKey', 'tipDeleteKey', 'tipEscKey', 'tipAddKey']);
+
+const hasTouchTip = (key: string): boolean => TOUCH_TIP_KEYS.has(key);

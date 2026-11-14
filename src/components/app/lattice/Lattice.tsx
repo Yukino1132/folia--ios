@@ -27,6 +27,7 @@ import { useReducedMotionFor } from '../../../hooks/useReducedMotionFor';
 import { isFlightBackArmed, planPageFromWall } from './wallFlight';
 import { beginWallTrip, WallTripLog } from './wallTripLog';
 import { LATTICE_WALL_ATTR } from '../../collectionFlight';
+import { isIosNative } from '../../../ios/iosRuntime';
 
 // The wall's display layer. It renders the play queue and never mutates it; opened from the
 // explore tab (`latticeSource` in useAppViewStore) it renders the explore page's entries in the
@@ -233,7 +234,7 @@ export default function Lattice({
             />
             <WallTripLog isReturn={isReturn} />
             <LatticeFocusButton isDaylight={isDaylight} tiles={tiles} onGoHome={onGoHome} />
-            <WallBackButton label={t('home.latticeBack')} onBack={onBack} />
+            <WallBackButton label={t(isIosNative() ? 'home.latticeBackTouch' : 'home.latticeBack')} onBack={onBack} />
             {/* The explore page's own control, beside the way back: other entries take the tiles' places. */}
             {isExplore && (
                 // A press with the mouse leaves the focus where it is: the wall's arrow keys and Escape

@@ -21,6 +21,7 @@ import { PLAYER_BOTTOM_BAR_BASE_OFFSET_PX, resolvePlayerBottomBarMaxOffset } fro
 import { Button, FoldedGroup, Group, PictureChoice, Reveal, Row, Segmented, Select, Slider, TextField, Toggle, Value, option, type SettingsGroupDef, type SettingsOptionDef } from '../kit';
 import { EntryViewPicture } from './pictures';
 import { useSettingsPage } from './settingsPageContext';
+import { isIosNative } from '../../../../ios/iosRuntime';
 
 // src/components/modal/settings/pages/PlayerPage.tsx
 // The 播放页 page: what the playing screen looks like. Which view play opens and the look of the
@@ -403,7 +404,7 @@ const PlayerPage: React.FC = () => {
                 <Row option={O.alwaysBackButton} hint={t('options.alwaysShowPlayerBackButtonDesc')}>
                     <Toggle checked={chrome.alwaysBackButton} onChange={chrome.setAlwaysBackButton} />
                 </Row>
-                <Row option={O.alwaysTrackSwitch} note={t('options.alwaysShowTrackSwitchButtonsDesc')}>
+                <Row option={O.alwaysTrackSwitch} note={t(isIosNative() ? 'options.alwaysShowTrackSwitchButtonsDescTouch' : 'options.alwaysShowTrackSwitchButtonsDesc')}>
                     <Toggle checked={chrome.alwaysTrackSwitch} onChange={chrome.setAlwaysTrackSwitch} />
                 </Row>
                 {isElectron && (

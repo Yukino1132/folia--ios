@@ -26,6 +26,7 @@ import {
 } from './LibraryTuiArtistRows';
 import { useLibraryTuiArtistFocus } from './useLibraryTuiArtistFocus';
 import { useLibraryTuiArtistKeyboard } from './useLibraryTuiArtistKeyboard';
+import { isIosNative } from '../../../ios/iosRuntime';
 
 // src/library/suites/tui/LibraryTuiArtist.tsx
 // 歌手页的 TUI renderer（P4.3）：状态栏（名字、可展开的简介、数量、状态与重试）、热门歌曲与专辑两栏（Tab 切换）。
@@ -309,9 +310,10 @@ const LibraryTuiArtist: React.FC<LibraryArtistSurfaceProps> = ({
                     </div>
                 </>
             )}
+            {/* 触屏上没有键盘：原生壳里换成手势说法（artistHintsTouch），打开专辑/歌手靠点按。 */}
             <footer className="shrink-0 border-t border-current/10 px-4 py-1.5 text-[11px] opacity-50">
-                {t('libraryTui.artistHints', { mod: PRIMARY_MODIFIER_LABEL })}
-                {(canOpenAlbum || canOpenArtist) && ` · ${t('libraryTui.hintOpenLinks')}`}
+                {t(isIosNative() ? 'libraryTui.artistHintsTouch' : 'libraryTui.artistHints', { mod: PRIMARY_MODIFIER_LABEL })}
+                {(canOpenAlbum || canOpenArtist) && ` · ${t(isIosNative() ? 'libraryTui.hintOpenLinksTouch' : 'libraryTui.hintOpenLinks')}`}
             </footer>
         </div>
     );

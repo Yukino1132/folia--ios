@@ -5,6 +5,7 @@ import type { PersonalFmRequestOptions, ProviderSongAvailability } from '../../.
 import { withLoginRequestLimit } from '../login/loginRequestLimit';
 import { withOnlineRequestLimit } from '../failure/onlineRequestLimit';
 import { errorFields } from '../../../utils/errorText';
+import { getNeteaseApiBaseOverride, onNeteaseApiBaseChange } from './neteaseEndpointSetting';
 
 type UnavailableSongReplacement = {
   replacementSong: SongResult;
@@ -14,6 +15,7 @@ type UnavailableSongReplacement = {
 
 // Robustly check for environment variable, falling back if undefined
 let API_BASE: string | null = null;
+let apiBaseChangeWatched = false;
 let songCopyrightRecommendationApiSupported: boolean | null = null;
 
 const getElectronBridge = () => {
@@ -28,6 +30,12 @@ const isElectronRuntime = () =>
   Boolean(getElectronBridge() && typeof getElectronBridge()?.getNeteasePort === 'function');
 
 const getConfiguredApiBase = () => {
+  // 用户在设置里填的地址最优先（只对原生壳有意义，桌面版走内嵌后端不用它）。
+  const userBase = getNeteaseApiBaseOverride();
+  if (userBase) {
+    return userBase;
+  }
+
   // 原生壳（iOS/Android）没有构建期环境变量可用，地址由 runtime-config.js 在运行时注入；
   // 有它就优先用它，桌面版与 Docker 版都不会带这个字段。
   const runtimeBase = typeof window !== 'undefined' ? window.__FOLIA_RUNTIME_CONFIG__?.neteaseApiBase : undefined;
@@ -137,6 +145,11 @@ const waitForNeteasePort = async (bridge: any): Promise<{ port: number | 'offlin
   }
 };
 
+// 用户在设置里改了地址时清掉缓存，下一次请求就用新地址，不用重启应用。
+export const resetNeteaseApiBaseCache = (): void => {
+  API_BASE = null;
+};
+
 const getApiBase = async () => {
   // Deliberately uncached under Electron: the local server starts asynchronously and can be
   // restarted from the login modal on a fresh port. Caching the first answer used to pin the
@@ -157,6 +170,14 @@ const getApiBase = async () => {
     // 必须是 127.0.0.1 而不是 localhost：本地 API 只监听 IPv4 回环（见 electron/main.cjs 的 startApi），
     // 有公网 IPv6 的机器上 localhost 会先解析到 ::1。
     return `http://127.0.0.1:${port}`;
+  }
+
+  // 用户在设置里改了中转地址时把这份缓存作废（neteaseEndpointSetting.ts 发通知，这里不反向依赖设置页）。
+  if (!apiBaseChangeWatched) {
+    apiBaseChangeWatched = true;
+    onNeteaseApiBaseChange(() => {
+      API_BASE = null;
+    });
   }
 
   if (API_BASE) return API_BASE;

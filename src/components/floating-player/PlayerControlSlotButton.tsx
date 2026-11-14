@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { resolvePlayerControlSlot, type PlayerControlSlotActionId, type PlayerControlSlotContext } from './playerControlSlotActions';
+import { isIosNative } from '../../ios/iosRuntime';
 
 // src/components/floating-player/PlayerControlSlotButton.tsx
 // 进度条胶囊右侧的一个可自定义槽位。样式沿用原来写死的循环 / 歌词时间轴按钮。
@@ -141,7 +142,7 @@ const PlayerControlSlotButton: React.FC<PlayerControlSlotButtonProps> = ({
                         : 'transform 180ms cubic-bezier(0.2, 0.8, 0.2, 1), background-color 150ms',
                 }),
             }}
-            title={canCustomize ? `${label}\n${t('player.slotCustomizeHint')}` : label}
+            title={canCustomize ? `${label}\n${t(isIosNative() ? 'player.slotCustomizeHintTouch' : 'player.slotCustomizeHint')}` : label}
             aria-label={label}
         >
             <Icon

@@ -74,6 +74,65 @@ html.folia-ios.folia-keyboard-open [data-folia-anchor-bottom] {
   padding-bottom: var(--folia-keyboard-inset, 0px);
 }
 
+/* 触控的可点区域下限。桌面端大量图标按钮只有 20–24px（鼠标够用，手指不够），
+   这里给所有 button/[role=button] 兜一个 44×44 的命中盒：图标本身不变形，多出来的
+   空间用伪元素撑开（负 inset 外扩），所以不会顶乱紧凑的图标排版。已经在 44px 以上的
+   控件不受影响（伪元素只是落在它们自己身上）。 */
+html.folia-ios button,
+html.folia-ios [role='button'] {
+  position: relative;
+  touch-action: manipulation;
+}
+
+html.folia-ios button::after,
+html.folia-ios [role='button']::after {
+  content: '';
+  position: absolute;
+  inset: 50% auto auto 50%;
+  width: max(100%, 44px);
+  height: max(100%, 44px);
+  transform: translate(-50%, -50%);
+  /* 只负责命中，不参加绘制也不吃层级 */
+  pointer-events: auto;
+}
+
+/* 手指按下要立刻有反馈：桌面端全靠 :hover，触屏没有 hover，没有这一条按下去毫无动静。 */
+html.folia-ios button:active,
+html.folia-ios [role='button']:active {
+  transform: scale(0.97);
+  transition: transform 80ms ease-out;
+}
+
+/* 列表项、卡片这类整块可点的区域同理：桌面端靠指针的位置高亮，触屏要的是按下即反馈。 */
+html.folia-ios [data-folia-tap] {
+  -webkit-user-select: none;
+  user-select: none;
+  touch-action: manipulation;
+}
+
+html.folia-ios [data-folia-tap]:active {
+  filter: brightness(1.12);
+}
+
+/* 滚动手感：惯性滚动与边缘不回弹（AppShell 已按安全区内缩，回弹会露出底色）。 */
+html.folia-ios [data-scroll],
+html.folia-ios .hide-scrollbar,
+html.folia-ios .overflow-y-auto,
+html.folia-ios .overflow-x-auto,
+html.folia-ios .overflow-auto {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+/* 性能：iOS 的 WKWebView 合成大面积的 backdrop-filter 很贵，玻璃面板叠在 3D 墙面/
+   visualizer（WebGL）上时尤其明显。原生壳里把 2xl/3xl 档降到 xl（模糊半径 24px → 12px），
+   观感几乎一样，滚动与动画的帧率回来一截。真机再省不下去时可以在设置里关掉动画强度。 */
+html.folia-ios .backdrop-blur-2xl,
+html.folia-ios .backdrop-blur-3xl {
+  -webkit-backdrop-filter: blur(12px) !important;
+  backdrop-filter: blur(12px) !important;
+}
+
 /* 播放页空闲时隐藏鼠标指针。挂点在播放页的视觉层容器上，弹窗和浮动控件都在它外面，
    不会被波及，所以不需要 !important。
    后代选择器压得住 Tailwind 的 cursor-* 靠的不是特异性，而是这条规则**不在任何

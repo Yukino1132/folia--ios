@@ -6,6 +6,8 @@ import { usePlayerChromeSettingsStore } from '../../../../stores/usePlayerChrome
 import { useStageSettingsStore } from '../../../../stores/useStageSettingsStore';
 import { Button, CopyValue, Group, Reveal, Row, Status, Toggle, Value, type SettingsOptionDef } from '../kit';
 import NavidromeRows from './integration/NavidromeRows';
+import NeteaseRelayRows from './integration/NeteaseRelayRows';
+import { isIosNative } from '../../../../ios/iosRuntime';
 import { O, SERVICES, STREAMING } from './integration/options';
 import { DesktopStageRows, WebStageRows } from './integration/StageModeRows';
 import SyncServerRows from './integration/SyncServerRows';
@@ -65,6 +67,8 @@ const IntegrationPage: React.FC = () => {
                 >
                     <Toggle checked={scrobbleEnabled} onChange={setScrobbleEnabled} />
                 </Row>
+                {/* 原生壳里装好之后改不了包，网易云中转地址只能在这里填（见 NeteaseRelayRows）。 */}
+                {isIosNative() && <NeteaseRelayRows />}
             </Group>
 
             <Group def={STREAMING}>

@@ -12,6 +12,7 @@ import { openOutsideLink } from '../../../../utils/system/outsideLink';
 import { FoundUpdateRow } from './FoundUpdateRow';
 import { ChinaDrivesRow } from './ChinaDrivesRow';
 import { iconLabel } from './iconLabel';
+import { isIosNative } from '../../../../ios/iosRuntime';
 
 // src/components/modal/settings/pages/HelpPage.tsx
 // The 帮助 page, reached from the foot of the side list: two entry cards (the release notes, the
@@ -35,6 +36,8 @@ const SHORTCUTS: SettingsGroupDef = { id: 'helpShortcuts', titleKey: 'help.keybo
 const PLAYER_KEYS: SettingsGroupDef = { id: 'helpPlayerControls', titleKey: 'help.playerControls' };
 const SUPPORT: SettingsGroupDef = { id: 'helpSupport', titleKey: 'aiHelp.title' };
 const ABOUT: SettingsGroupDef = { id: 'helpAbout', titleKey: 'help.version' };
+/** 原生壳里替代两组键位的那一段（触屏上没有键盘）。 */
+const TOUCH: SettingsGroupDef = { id: 'helpTouch', titleKey: 'help.touchHeading' };
 
 /** Two columns that become one where a column would be narrower than 280px. */
 const COLUMNS_CLASS = 'grid grid-cols-[repeat(auto-fit,minmax(min(100%,280px),1fr))] gap-x-3';
@@ -119,29 +122,35 @@ const HelpPage: React.FC<HelpPageProps> = ({ onOpenReleaseNotes, onOpenAiHelp, o
                 />
             </div>
 
-            {/* Each group is the first in a cell of its own, so the two headings stand level; the
-                cells then sit as far under the cards above as any group does. */}
-            <div className={`${COLUMNS_CLASS} mt-2 gap-y-2`}>
-                <div>
-                    <Group def={SHORTCUTS}>
-                        {HELP_TAB_PRIMARY_SHORTCUTS.map(shortcut => (
-                            <KeyRow key={shortcut.id} label={t(shortcut.titleKey, shortcut.fallback)} withPrimaryModifier keys={[shortcut.key]} />
-                        ))}
-                    </Group>
+            {/* 触屏上没有键盘：这两组键位在原生壳里不画，改成一句「手势与触摸怎么用」，
+                打开 Ponder 教程（那里讲的是触摸）。桌面上两组照原样并排。 */}
+            {isIosNative() ? (
+                <Group def={TOUCH} bare>
+                    <Row label={t('help.touchControls')} note={t('help.touchControlsNote')} onClick={openPonderNavigation} />
+                </Group>
+            ) : (
+                <div className={`${COLUMNS_CLASS} mt-2 gap-y-2`}>
+                    <div>
+                        <Group def={SHORTCUTS}>
+                            {HELP_TAB_PRIMARY_SHORTCUTS.map(shortcut => (
+                                <KeyRow key={shortcut.id} label={t(shortcut.titleKey, shortcut.fallback)} withPrimaryModifier keys={[shortcut.key]} />
+                            ))}
+                        </Group>
+                    </div>
+                    <div>
+                        <Group def={PLAYER_KEYS}>
+                            {HELP_TAB_PLAYER_CONTROLS.map(control => (
+                                <KeyRow
+                                    key={control.id}
+                                    label={control.titleKeys.map(titleKey => t(titleKey)).join(' / ')}
+                                    withPrimaryModifier={control.withPrimaryModifier}
+                                    keys={control.keys}
+                                />
+                            ))}
+                        </Group>
+                    </div>
                 </div>
-                <div>
-                    <Group def={PLAYER_KEYS}>
-                        {HELP_TAB_PLAYER_CONTROLS.map(control => (
-                            <KeyRow
-                                key={control.id}
-                                label={control.titleKeys.map(titleKey => t(titleKey)).join(' / ')}
-                                withPrimaryModifier={control.withPrimaryModifier}
-                                keys={control.keys}
-                            />
-                        ))}
-                    </Group>
-                </div>
-            </div>
+            )}
 
             <Group def={SUPPORT} bare>
                 <Row label={iconLabel(CircleHelp, t('aiHelp.openButton'))} onClick={onOpenAiHelp} />

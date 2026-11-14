@@ -19,6 +19,7 @@ import { SCRATCHPAD_HANDLE_STYLE_LABEL_KEYS, SCRATCHPAD_HANDLE_STYLES, useScratc
 import { Button, Chips, Group, PictureChoice, Reveal, Row, Segmented, Slider, Toggle, option, type SettingsGroupDef, type SettingsOptionDef } from '../kit';
 import { BRAVAIS_WALL_OPTIONS, BravaisWallGroup } from './BravaisWallGroup';
 import { GridCardsPreview, HomeCardStylePicture, ScratchpadHandleStylePicture } from './pictures';
+import { isIosNative } from '../../../../ios/iosRuntime';
 
 // src/components/modal/settings/pages/HomePage.tsx
 // The 主页与歌单 page: which library UI the home screen, collections and artists are browsed in
@@ -201,7 +202,7 @@ const HomePage: React.FC = () => {
             )}
 
             <Group def={SCRATCHPAD}>
-                <Row option={O.scratchpadShowHandle} note={t('options.scratchpadShowHandleDesc')}>
+                <Row option={O.scratchpadShowHandle} note={t(isIosNative() ? 'options.scratchpadShowHandleDescTouch' : 'options.scratchpadShowHandleDesc')}>
                     <Toggle checked={scratchpad.showHandle} onChange={scratchpad.setShowHandle} />
                 </Row>
                 {/* The height and the look only mean anything while the tab is drawn. */}

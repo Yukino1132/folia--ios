@@ -203,7 +203,14 @@ export default {
         "v3": "Winding down",
         "v4": "Quiet hours"
       }
-    }
+    },
+    "historyBandHintTouch": "In time order · can’t be reordered · tap to play",
+    "tipPlayKeyTouch": "Tap",
+    "tipDeleteKeyTouch": "Long-press",
+    "tipEscKeyTouch": "Tap blank",
+    "tipAddKeyTouch": "Long-press another",
+    "overviewHelpTouch": "Drag on blank space to box-select (across rows), long-press another to add; tap to play; use “Full page” on a band to see everything and reorder",
+    "tipEscTouch": "clear selection",
   },
   "libraryBravais": {
     "suiteName": "Bravais wall",
@@ -399,7 +406,17 @@ export default {
     "bioMore": "more",
     "bioLess": "less",
     "columnYear": "Year",
-    "artistHints": "↑↓ move · Tab songs/albums · Enter play/open · Shift+Enter queue · {{mod}}+Enter play all · {{mod}}+Shift+Enter queue top songs · Esc back"
+    "artistHints": "↑↓ move · Tab songs/albums · Enter play/open · Shift+Enter queue · {{mod}}+Enter play all · {{mod}}+Shift+Enter queue top songs · Esc back",
+    "hintsTouch": "Tap a song to play · tap the arrow to queue · tap a column head to sort · tap the top to go back",
+    "hintOpenLinksTouch": "Tap the cover for the album · tap the artist name for the artist",
+    "hintRemoveTouch": "Long-press to remove",
+    "hintDislikeTouch": "Long-press to dislike",
+    "homeHintsTouch": "Tap an item to open · swipe sideways to change section · tap the top to go back · tap the corner to filter",
+    "homeTreeHintsTouch": "Tap the triangle to expand or fold",
+    "accountsHintsTouch": "Tap a platform to switch or sign in · tap the top to close",
+    "accountsGuestHintsTouch": "Tap a platform to sign in",
+    "homeAccountsHintTouch": "Tap the corner to switch platforms",
+    "artistHintsTouch": "Tap a song to play · tap the arrow to queue · swipe sideways for songs/albums · tap the top to go back",
   },
   "libraryBravaisCollection": {
     "matchCount": "{{matches}} / {{total}}",
@@ -597,6 +614,8 @@ export default {
     "songRegionRestricted": "Plays on mainland China networks only",
     "songRetrying": "Connection failed. Retrying…",
     "songServiceNotConfigured": "This music source isn't available here (not set up, or the desktop app is required).",
+    "notConfiguredMobile": "This source has no relay configured",
+    "noteNotConfiguredMobile": "Open Settings → Connections and enter your own relay address, or switch to Kugou or QQ, which need no relay.",
     "songRateLimited": "Too many requests. Try again in {{seconds}}s.",
     "songLoginRequired": "Sign in to play this song.",
     "songPurchaseRequired": "This song must be purchased before it can be played.",
@@ -2048,7 +2067,8 @@ export default {
     "dailyStyleSaveFailed": "Couldn't switch to these styles. Please try again later",
     "dislikeRecommendationFailed": "This recommendation could not be replaced. Please try again later.",
     "removeTrackFailed": "Could not remove the song",
-    "stage": "Stage"
+    "stage": "Stage",
+    "latticeBackTouch": "The top-left button returns. Tap a poster to expand it and tap again to collapse; swiping in from the left edge also returns.",
   },
   "animation": {
     "calm": "calm",
@@ -2095,7 +2115,10 @@ export default {
     "servicePackLabel": "{{codename}} Update SP{{servicePack}} · Major update",
     "ponder": "Ponder Help",
     "ponderDescription": "Learn Folia's basic controls and operating model",
-    "version": "Version"
+    "version": "Version",
+    "touchHeading": "Gestures and touch",
+    "touchControls": "How to work it on a phone",
+    "touchControlsNote": "Tap a playing card to open the player, pinch to see the queue, swipe in from the left edge to go back; the tutorials list every gesture.",
   },
   "qishui": { "recentPlayed": "Recently played on Qishui", "recommended": "Recommended for you" },
   "listeningRank": {
@@ -2325,6 +2348,8 @@ export default {
     "randomPoolCount": "{{selected}} of {{total}}",
     "randomPoolDesc": "Each song switches to one of the chosen styles, played with that style's own saved settings.",
     "randomPoolChoose": "Choose random pool",
+    "randomPoolMobileNote": "Heavy 3D and shader styles stay out of the random pool on phones: rebuilding per track would wreck the frame rate. Pick one by hand if you want it.",
+    "iosHeavyVisualizerNotice": "This style is heavy on phones; switch to a lighter one if it stutters.",
     "ponderHints": "Ponder tutorial hints",
     "ponderHintsDesc": "Hovering a teachable control shows a hint to hold G.",
     "ponderHintsAlways": "Always show",
@@ -3917,6 +3942,14 @@ export default {
     "scanningFolder": "Scanning {{folderName}}",
     "lyricFilterUpdated": "Lyric filter rule updated",
     "neteaseScrobble": "Report plays (NetEase only)",
+    "neteaseRelay": "Netease relay address",
+    "neteaseRelayDesc": "There is no backend inside the app on phones; point it at your own Netease API service to use Netease.",
+    "neteaseRelayInUseOwn": "Using the address you entered.",
+    "neteaseRelayInUseBuiltIn": "Using the address built into this package.",
+    "neteaseRelayMissing": "No address yet, so Netease cannot be used.",
+    "neteaseRelayMissingStatus": "Takes effect right after saving, no reinstall needed.",
+    "neteaseRelaySave": "Save",
+    "neteaseRelayClear": "Clear",
     "neteaseScrobbleDesc": "Reports a play to NetEase after 30 seconds of listening. Carries some risk.",
     "neteaseScrobbleSignInHint": "Sign in to NetEase Cloud Music to use this.",
     "queueDefaultBehavior": "Default position when adding to queue",
@@ -3948,6 +3981,9 @@ export default {
     "autoAiLyricSegmentationDesc": "When a song with Chinese or Japanese lyrics starts and has no saved segmentation, split its lyrics into words with AI by itself. Only affects lyric styles that lay text out by words. Runs once per song and uses AI requests.",
     "visualizerMode": "Mode",
     "noDescription": "No description available",
+    "scratchpadShowHandleDescTouch": "The tab on the left edge of the window. With it hidden, the command palette still opens the scratchpad.",
+    "alwaysShowTrackSwitchButtonsDescTouch": "Keep the previous/next arrows on both sides of the progress bar title visible.",
+    "machiCameraModeHintTouch": "Drag the picture to turn, pinch to zoom, drag with two fingers to pan. Default view: about 8 seconds after you let go it returns to the default framing. Custom view: it stays where you leave it and is remembered, one for each scene; the sliders below adjust it too.",
   },
   "releaseNotes": {
     "v0_7_0": {
@@ -4613,6 +4649,7 @@ export default {
     "slotSuggestionReplaceSecondary": "Replace the right button ({{action}})",
     "capsuleQuickActions": "Quick actions",
     "capsuleOpensPalette": "Click to open the command palette",
+    "slotCustomizeHintTouch": "Long-press to change",
   },
   "localMusic": {
     "foldersAndPlaylists": "Folders",

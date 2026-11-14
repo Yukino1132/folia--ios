@@ -14,6 +14,7 @@ import { useSceneSettingsStore } from '../settings/useSceneSettingsStore';
 import { createSceneEventBus } from './sceneEvents';
 import { onQueueEnd } from './queueEnd';
 import { publishSceneViewpoints, type ViewpointAnchor } from './sceneViewpoints';
+import { clampRenderPixelRatio } from '../../../ios/iosPerformance';
 import { sampleSurface } from './surfaceSample';
 import { planSceneLayers, resolveSceneOffered, sceneOffersBackground, sceneOffersLyricStyle } from './scenePlacement';
 import { createSceneSignals, diffSceneSignals, trackLook, type SceneSignalSnapshot } from './sceneSignals';
@@ -129,7 +130,7 @@ const SceneStage: React.FC<{ definition: SceneDefinition; rendererProps: Rendere
         box.addEventListener('webglcontextlost', onContextLost, true);
         const stopQueueEnd = onQueueEnd(() => emit('queueEnd', {}));
         const resizeObserver = new ResizeObserver(bus.guard(() => {
-            runtime?.resize?.({ width: box.clientWidth, height: box.clientHeight, dpr: window.devicePixelRatio || 1 });
+            runtime?.resize?.({ width: box.clientWidth, height: box.clientHeight, dpr: clampRenderPixelRatio(window.devicePixelRatio || 1) });
         }));
         resizeObserver.observe(box);
 
@@ -277,7 +278,7 @@ const SceneStage: React.FC<{ definition: SceneDefinition; rendererProps: Rendere
                 runtime = created;
                 mark('created');
                 publishSceneViewpoints(id, anchors.filter((anchor): anchor is ViewpointAnchor => anchor.kind === 'viewpoint'));
-                runtime.resize?.({ width: box.clientWidth, height: box.clientHeight, dpr: window.devicePixelRatio || 1 });
+                runtime.resize?.({ width: box.clientWidth, height: box.clientHeight, dpr: clampRenderPixelRatio(window.devicePixelRatio || 1) });
                 console.info('[SceneHost] scene loaded', id, { attempt });
                 readyTimer = window.setTimeout(() => show(true), READY_LIMIT_MS);
                 frameRequest = requestAnimationFrame(tick);

@@ -11,6 +11,7 @@ import { PRIMARY_MODIFIER_LABEL } from '../../../../utils/platform';
 import { Group, KeyCapture, Row, Segmented, Select, Toggle, Value, option, type SettingsGroupDef, type SettingsOptionDef } from '../kit';
 import { GLOBAL_SHORTCUTS_OPTIONS, GlobalShortcutsGroup } from './GlobalShortcutsGroup';
 import { useSettingsPage } from './settingsPageContext';
+import { isIosNative } from '../../../../ios/iosRuntime';
 
 // src/components/modal/settings/pages/InteractionPage.tsx
 // The 快捷操作 page: how a person reaches a command quickly. First the command palette: the three
@@ -89,21 +90,24 @@ const InteractionPage: React.FC = () => {
                         />
                     ))}
                 </Row>
-                <Row option={O.shortcut} hint={t('options.customShortcutDesc')}>
-                    <KeyCapture
-                        value={interaction.shortcutLetter}
-                        onChange={interaction.setShortcutLetter}
-                        validate={validateShortcutKey}
-                        prefix={['Alt']}
-                    />
-                    <Value>{t('options.customShortcutCommand')}</Value>
-                    <Select
-                        name={t('options.customShortcutCommand')}
-                        value={interaction.shortcutCommandId ?? ''}
-                        options={shortcutCommandOptions}
-                        onChange={value => interaction.setShortcutCommandId(value || null)}
-                    />
-                </Row>
+                {/* 触屏上没有 Alt/⌘ 可以按：自定义快捷键那一行在原生壳里不画。 */}
+                {!isIosNative() && (
+                    <Row option={O.shortcut} hint={t('options.customShortcutDesc')}>
+                        <KeyCapture
+                            value={interaction.shortcutLetter}
+                            onChange={interaction.setShortcutLetter}
+                            validate={validateShortcutKey}
+                            prefix={['Alt']}
+                        />
+                        <Value>{t('options.customShortcutCommand')}</Value>
+                        <Select
+                            name={t('options.customShortcutCommand')}
+                            value={interaction.shortcutCommandId ?? ''}
+                            options={shortcutCommandOptions}
+                            onChange={value => interaction.setShortcutCommandId(value || null)}
+                        />
+                    </Row>
+                )}
             </Group>
 
             {isElectron && <GlobalShortcutsGroup />}
@@ -127,9 +131,12 @@ const InteractionPage: React.FC = () => {
                         />
                     </Row>
                 )}
-                <Row option={O.paletteHotkey} hint={t('options.gridPaletteHotkeyDesc')}>
-                    <Toggle checked={interaction.paletteHotkey} onChange={interaction.setPaletteHotkey} />
-                </Row>
+                {/* 「S 键」那个开关也是键盘：原生壳里不画。 */}
+                {!isIosNative() && (
+                    <Row option={O.paletteHotkey} hint={t('options.gridPaletteHotkeyDesc')}>
+                        <Toggle checked={interaction.paletteHotkey} onChange={interaction.setPaletteHotkey} />
+                    </Row>
+                )}
             </Group>
         </>
     );

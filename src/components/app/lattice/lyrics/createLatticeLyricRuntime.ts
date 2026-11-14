@@ -10,6 +10,7 @@ import { createLatticeTimeline, stepLatticeSpring } from './latticeLyricTimeline
 import { createLatticeLyricFrameLoop } from './latticeLyricFrameLoop';
 import type { LatticeLyricInput, LatticeLyricRuntime } from './types';
 import { resolveSingleTrackSubtitleMode } from '../../../../utils/lyrics/alternateText';
+import { clampRenderPixelRatio } from '../../../../ios/iosPerformance';
 
 // src/components/app/lattice/lyrics/createLatticeLyricRuntime.ts
 interface Track { view: LatticeLineView; y: number; vy: number; scale: number; vs: number;
@@ -27,8 +28,12 @@ let initialization: Promise<unknown> = Promise.resolve();
  * supersampling for that downscale and visibly softens glyph edges. Capped at 2 so a denser screen
  * never costs more than before.
  */
-export const latticeLyricResolution = (devicePixelRatio: number) =>
-    Math.min(2, Math.max(1, Number.isFinite(devicePixelRatio) && devicePixelRatio > 0 ? Math.ceil(devicePixelRatio) : 1));
+export const latticeLyricResolution = (devicePixelRatio: number) => {
+    const whole = Math.min(2, Math.max(1, Number.isFinite(devicePixelRatio) && devicePixelRatio > 0 ? Math.ceil(devicePixelRatio) : 1));
+    // 手机屏幕（3x）上按 2x 渲染再经 blur / 边缘滤镜逐帧过一遍，是这一层最贵的一项；
+    // 原生壳把它压到 1x（iosPerformance.ts 的 clampRenderPixelRatio），桌面端仍是上面的值。
+    return Math.max(1, Math.min(whole, clampRenderPixelRatio(whole)));
+};
 
 // Passing boolean `true` makes Pixi release module-global pools shared with the Player renderer.
 const destroyApplication = (app: import('pixi.js').Application) => {

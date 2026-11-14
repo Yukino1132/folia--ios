@@ -203,7 +203,14 @@ export default {
         "v3": "Bersantai",
         "v4": "Jam tenang"
       }
-    }
+    },
+    "historyBandHintTouch": "Urut waktu · tidak bisa diurutkan ulang · ketuk untuk memutar",
+    "tipPlayKeyTouch": "Ketuk",
+    "tipDeleteKeyTouch": "Tekan lama",
+    "tipEscKeyTouch": "Ketuk kosong",
+    "tipAddKeyTouch": "Tekan lama lagu lain",
+    "overviewHelpTouch": "Seret di ruang kosong untuk memilih kotak (lintas baris), tekan lama lagu lain untuk menambah; ketuk untuk memutar; pakai “Halaman penuh” pada pita untuk melihat semua dan mengurutkan ulang",
+    "tipEscTouch": "batalkan pilihan",
   },
   "libraryBravais": {
     "suiteName": "Dinding Bravais",
@@ -399,7 +406,17 @@ export default {
     "bioMore": "lebih",
     "bioLess": "ringkas",
     "columnYear": "Tahun",
-    "artistHints": "↑↓ pindah · Tab lagu/album · Enter putar/buka · Shift+Enter antrekan · {{mod}}+Enter putar semua · {{mod}}+Shift+Enter antrekan lagu populer · Esc kembali"
+    "artistHints": "↑↓ pindah · Tab lagu/album · Enter putar/buka · Shift+Enter antrekan · {{mod}}+Enter putar semua · {{mod}}+Shift+Enter antrekan lagu populer · Esc kembali",
+    "hintsTouch": "Ketuk lagu untuk memutar · ketuk panah untuk mengantre · ketuk judul kolom untuk mengurutkan · ketuk bagian atas untuk kembali",
+    "hintOpenLinksTouch": "Ketuk sampul untuk album · ketuk nama artis untuk artis",
+    "hintRemoveTouch": "Tekan lama untuk menghapus",
+    "hintDislikeTouch": "Tekan lama untuk tidak suka",
+    "homeHintsTouch": "Ketuk item untuk membuka · geser ke samping untuk ganti bagian · ketuk bagian atas untuk kembali · ketuk sudut untuk menyaring",
+    "homeTreeHintsTouch": "Ketuk segitiga untuk membuka atau melipat",
+    "accountsHintsTouch": "Ketuk platform untuk beralih atau masuk · ketuk bagian atas untuk menutup",
+    "accountsGuestHintsTouch": "Ketuk platform untuk masuk",
+    "homeAccountsHintTouch": "Ketuk sudut untuk ganti platform",
+    "artistHintsTouch": "Ketuk lagu untuk memutar · ketuk panah untuk mengantre · geser ke samping untuk lagu/album · ketuk bagian atas untuk kembali",
   },
   "libraryBravaisCollection": {
     "matchCount": "{{matches}} / {{total}}",
@@ -597,6 +614,8 @@ export default {
     "songRegionRestricted": "Hanya dapat diputar dari jaringan Tiongkok daratan",
     "songRetrying": "Koneksi gagal. Mencoba lagi…",
     "songServiceNotConfigured": "Sumber musik ini tidak tersedia di sini (belum dikonfigurasi atau memerlukan aplikasi desktop).",
+    "notConfiguredMobile": "Sumber ini belum punya relay",
+    "noteNotConfiguredMobile": "Buka Pengaturan → Koneksi lalu isi alamat relay milikmu, atau pakai Kugou atau QQ yang tidak perlu relay.",
     "songRateLimited": "Terlalu banyak permintaan. Coba lagi dalam {{seconds}} detik.",
     "songLoginRequired": "Masuk ke akun untuk memutar lagu ini.",
     "songPurchaseRequired": "Lagu ini harus dibeli sebelum dapat diputar.",
@@ -2048,7 +2067,8 @@ export default {
     "dailyStyleSaveFailed": "Gagal beralih ke gaya ini. Coba lagi nanti",
     "dislikeRecommendationFailed": "Rekomendasi ini tidak dapat diganti. Silakan coba lagi nanti.",
     "removeTrackFailed": "Lagu tidak dapat dihapus",
-    "stage": "Stage"
+    "stage": "Stage",
+    "latticeBackTouch": "Tombol kiri atas untuk kembali. Ketuk poster untuk membuka dan ketuk lagi untuk menutup; menggeser dari tepi kiri juga kembali.",
   },
   "animation": {
     "calm": "tenang",
@@ -2095,7 +2115,10 @@ export default {
     "servicePackLabel": "{{codename}} Update SP{{servicePack}} · Pembaruan besar",
     "ponder": "Ponder Bantuan",
     "ponderDescription": "Pelajari kontrol dasar dan cara kerja Folia",
-    "version": "Versi"
+    "version": "Versi",
+    "touchHeading": "Gestur dan sentuhan",
+    "touchControls": "Cara memakainya di ponsel",
+    "touchControlsNote": "Ketuk kartu yang sedang diputar untuk membuka pemutar, cubit untuk melihat antrean, geser dari tepi kiri untuk kembali; semua gestur ada di tutorial.",
   },
   "qishui": { "recentPlayed": "Terakhir diputar di Qishui", "recommended": "Rekomendasi untuk Anda" },
   "listeningRank": {
@@ -2325,6 +2348,8 @@ export default {
     "randomPoolCount": "{{selected}} dari {{total}}",
     "randomPoolDesc": "Setiap lagu beralih ke salah satu gaya yang dipilih, dengan pengaturan tersimpan milik gaya itu.",
     "randomPoolChoose": "Pilih kumpulan acak",
+    "randomPoolMobileNote": "Gaya 3D dan shader berat tidak ikut acak di ponsel: membangun ulang tiap lagu akan menghancurkan frame rate. Pilih sendiri kalau mau.",
+    "iosHeavyVisualizerNotice": "Gaya ini berat di ponsel; ganti ke yang lebih ringan kalau tersendat.",
     "ponderHints": "Petunjuk tutorial Ponder",
     "ponderHintsDesc": "Mengarahkan kursor ke kontrol yang bisa dipelajari memunculkan petunjuk menahan G.",
     "ponderHintsAlways": "Selalu tampilkan",
@@ -3917,6 +3942,14 @@ export default {
     "scanningFolder": "Memindai {{folderName}}",
     "lyricFilterUpdated": "Aturan filter lirik diperbarui",
     "neteaseScrobble": "Laporkan pemutaran (khusus NetEase)",
+    "neteaseRelay": "Alamat relay Netease",
+    "neteaseRelayDesc": "Di ponsel tidak ada backend bawaan; isi alamat layanan API Netease milikmu supaya bisa dipakai.",
+    "neteaseRelayInUseOwn": "Memakai alamat yang kamu isi.",
+    "neteaseRelayInUseBuiltIn": "Memakai alamat bawaan paket ini.",
+    "neteaseRelayMissing": "Alamat belum diisi, Netease belum bisa dipakai.",
+    "neteaseRelayMissingStatus": "Langsung berlaku setelah disimpan, tanpa pasang ulang.",
+    "neteaseRelaySave": "Simpan",
+    "neteaseRelayClear": "Hapus",
     "neteaseScrobbleDesc": "Melaporkan pemutaran ke NetEase setelah 30 detik. Ada risikonya.",
     "neteaseScrobbleSignInHint": "Masuk ke NetEase Cloud Music untuk memakai ini.",
     "queueDefaultBehavior": "Posisi default saat menambahkan ke antrean",
@@ -3947,7 +3980,10 @@ export default {
     "autoAiLyricSegmentation": "Segmentasi AI otomatis",
     "autoAiLyricSegmentationDesc": "Saat lagu dengan lirik Tionghoa atau Jepang diputar dan belum punya segmentasi tersimpan, pisahkan liriknya menjadi kata dengan AI secara otomatis. Hanya berlaku untuk gaya lirik yang menata teks per kata. Berjalan sekali per lagu dan memakai permintaan AI.",
     "visualizerMode": "Mode",
-    "noDescription": "Tidak ada deskripsi tersedia"
+    "noDescription": "Tidak ada deskripsi tersedia",
+    "scratchpadShowHandleDescTouch": "Tab di tepi kiri jendela. Saat disembunyikan, palet perintah masih bisa membuka coretan.",
+    "alwaysShowTrackSwitchButtonsDescTouch": "Biarkan panah sebelumnya/berikutnya di kedua sisi judul bilah kemajuan tetap tampil.",
+    "machiCameraModeHintTouch": "Seret gambar untuk memutar sudut, cubit untuk memperbesar, seret dengan dua jari untuk menggeser. Tampilan bawaan: sekitar 8 detik setelah dilepas kembali ke komposisi bawaan. Tampilan khusus: berhenti di tempat terakhir dan diingat, satu per adegan; penggeser di bawah juga bisa menyetelnya.",
   },
   "releaseNotes": {
     "v0_7_0": {
@@ -4612,7 +4648,8 @@ export default {
     "slotSuggestionReplacePrimary": "Ganti tombol kiri ({{action}})",
     "slotSuggestionReplaceSecondary": "Ganti tombol kanan ({{action}})",
     "capsuleQuickActions": "Aksi cepat",
-    "capsuleOpensPalette": "Klik untuk membuka palet perintah"
+    "capsuleOpensPalette": "Klik untuk membuka palet perintah",
+    "slotCustomizeHintTouch": "Tekan lama untuk mengganti",
   },
   "localMusic": {
     "foldersAndPlaylists": "Folder",

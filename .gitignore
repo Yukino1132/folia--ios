@@ -119,3 +119,5 @@ ios/App/App.xcodeproj/xcuserdata/
 ios/App/build/
 build/ios/
 ios/App/.xcode.env.local
+
+.vercel

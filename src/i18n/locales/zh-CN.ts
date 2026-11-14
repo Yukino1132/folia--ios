@@ -203,7 +203,14 @@ export default {
         "v3": "夜色正好",
         "v4": "晚安时间"
       }
-    }
+    },
+    "historyBandHintTouch": "按时间排 · 不能拖动重排 · 轻点播放",
+    "tipPlayKeyTouch": "轻点",
+    "tipDeleteKeyTouch": "长按",
+    "tipEscKeyTouch": "点空白",
+    "tipAddKeyTouch": "长按另一首",
+    "overviewHelpTouch": "空白处拖动框选（可以跨行），长按另一首加选；点一下播放；点信息条上的「展开整页」看全部、拖动重排",
+    "tipEscTouch": "取消选择",
   },
   "libraryBravais": {
     "suiteName": "Bravais 墙面",
@@ -399,7 +406,17 @@ export default {
     "bioMore": "展开",
     "bioLess": "收起",
     "columnYear": "年份",
-    "artistHints": "↑↓ 移动 · Tab 歌曲/专辑 · Enter 播放/打开 · Shift+Enter 入队 · {{mod}}+Enter 全部播放 · {{mod}}+Shift+Enter 热门歌曲入队 · Esc 返回"
+    "artistHints": "↑↓ 移动 · Tab 歌曲/专辑 · Enter 播放/打开 · Shift+Enter 入队 · {{mod}}+Enter 全部播放 · {{mod}}+Shift+Enter 热门歌曲入队 · Esc 返回",
+    "hintsTouch": "点一首播放 · 点右侧箭头入队 · 点列头排序 · 点顶部返回",
+    "hintOpenLinksTouch": "点专辑封面打开专辑 · 点歌手名打开歌手",
+    "hintRemoveTouch": "长按删除",
+    "hintDislikeTouch": "长按不喜欢",
+    "homeHintsTouch": "点一项打开 · 左右滑切换分区 · 点顶部返回 · 点右上角筛选",
+    "homeTreeHintsTouch": "点三角展开或折叠",
+    "accountsHintsTouch": "点一个平台切换或登录 · 点顶部返回关闭",
+    "accountsGuestHintsTouch": "点一个平台登录",
+    "homeAccountsHintTouch": "点右上角切换平台",
+    "artistHintsTouch": "点歌曲播放 · 点右侧箭头入队 · 左右滑切换歌曲/专辑 · 点顶部返回",
   },
   "libraryBravaisCollection": {
     "matchCount": "{{matches}} / {{total}}",
@@ -597,6 +614,8 @@ export default {
     "songRegionRestricted": "仅限中国大陆网络播放",
     "songRetrying": "连接失败，正在重试…",
     "songServiceNotConfigured": "当前环境无法使用这个音源（未配置或需要桌面版）",
+    "notConfiguredMobile": "这个音源还没接上中转服务",
+    "noteNotConfiguredMobile": "到「设置 → 连接与集成」填上自己的中转地址，或改用酷狗、QQ 这类免中转的音源。",
     "songRateLimited": "请求过于频繁，请在 {{seconds}} 秒后重试",
     "songLoginRequired": "登录后才能播放这首歌",
     "songPurchaseRequired": "这首歌需要购买后才能播放",
@@ -2048,7 +2067,8 @@ export default {
     "dailyStyleSaveFailed": "没能换成这些风格，请稍后重试",
     "dislikeRecommendationFailed": "暂时无法更换这首推荐，请稍后重试",
     "removeTrackFailed": "移除失败",
-    "stage": "舞台"
+    "stage": "舞台",
+    "latticeBackTouch": "左上角返回上一页。点海报可展开，再点一次收起；从屏幕左缘右滑也能返回。",
   },
   "animation": {
     "calm": "平静",
@@ -2095,7 +2115,10 @@ export default {
     "servicePackLabel": "{{codename}} Update SP{{servicePack}} · 重大更新",
     "ponder": "思索帮助页",
     "ponderDescription": "了解 Folia 的基本操作与运行逻辑",
-    "version": "版本"
+    "version": "版本",
+    "touchHeading": "手势与触摸",
+    "touchControls": "在手机上怎么操作",
+    "touchControlsNote": "点一下播放卡片进播放页，双指捏合看队列，从屏幕左缘右滑返回；教程里有全部手势。",
   },
   "qishui": { "recentPlayed": "汽水最近播放", "recommended": "为你推荐" },
   "listeningRank": {
@@ -2325,6 +2348,8 @@ export default {
     "randomPoolCount": "已选 {{selected}}/{{total}}",
     "randomPoolDesc": "每首歌从选中的样式里换一种，各样式用自己保存的参数。",
     "randomPoolChoose": "选择随机池",
+    "randomPoolMobileNote": "手机上 3D 与重着色器的样式不进随机池：每首重编一次会把帧率打穿，想看得单独挑。",
+    "iosHeavyVisualizerNotice": "这个样式在手机上开销较大，掉帧的话换个轻一点的。",
     "ponderHints": "思索教程提示",
     "ponderHintsDesc": "指针停在可教学的控件上时提示长按 G。",
     "ponderHintsAlways": "始终显示",
@@ -3918,6 +3943,14 @@ export default {
     "scanningFolder": "正在扫描 {{folderName}}",
     "lyricFilterUpdated": "歌词过滤规则已更新",
     "neteaseScrobble": "上报播放记录(仅网易云)",
+    "neteaseRelay": "网易云中转地址",
+    "neteaseRelayDesc": "手机上没有内置后端，填一个自己部署的网易云 API 服务地址就能用网易云。",
+    "neteaseRelayInUseOwn": "正在用你填的地址。",
+    "neteaseRelayInUseBuiltIn": "正在用打包时内置的地址。",
+    "neteaseRelayMissing": "还没填地址，网易云现在用不了。",
+    "neteaseRelayMissingStatus": "填写后立即生效，不用重装应用。",
+    "neteaseRelaySave": "保存",
+    "neteaseRelayClear": "清除",
     "neteaseScrobbleDesc": "听满 30 秒后上报到你的网易云账号，有一定风险。",
     "neteaseScrobbleSignInHint": "需要先登录网易云音乐账号。",
     "queueDefaultBehavior": "加入队列的默认位置",
@@ -3948,6 +3981,9 @@ export default {
     "autoAiLyricSegmentation": "自动 AI 分词",
     "autoAiLyricSegmentationDesc": "播放含中文或日文歌词、且还没有保存分词的歌曲时，自动用 AI 给歌词分词。只影响按词排版的歌词样式；每首歌只自动跑一次，会消耗 AI 请求额度。",
     "noDescription": "暂无详细介绍",
+    "scratchpadShowHandleDescTouch": "窗口左缘的那道把手。关掉后仍可从命令面板打开速记簿。",
+    "alwaysShowTrackSwitchButtonsDescTouch": "让进度条标题两侧的上一首/下一首箭头一直显示。",
+    "machiCameraModeHintTouch": "在画面上拖动转视角、双指捏合缩放、双指拖动平移。默认视角：松手约 8 秒后回到默认构图。自定义视角：松手就停在那里并记住，也可以用下面的滑块调；每个场景各记一份。",
   },
   "releaseNotes": {
     "v0_7_0": {
@@ -4613,6 +4649,7 @@ export default {
     "slotSuggestionReplaceSecondary": "换掉右侧按钮「{{action}}」",
     "capsuleQuickActions": "快捷操作",
     "capsuleOpensPalette": "点一下打开命令面板",
+    "slotCustomizeHintTouch": "长按可更换",
   },
   "localMusic": {
     "foldersAndPlaylists": "文件夹",
