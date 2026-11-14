@@ -38,6 +38,13 @@ on:
       - 'scripts/ios/**'
       - 'capacitor.config.json'
       - '.github/workflows/build-ios-ipa.yml'
+      # 应用自身的代码也在包里：改了 src 下的任何东西都要重新出包，否则装的还是旧界面。
+      - 'src/**'
+      - 'public/**'
+      - 'index.html'
+      - 'vite.config.ts'
+      - 'package.json'
+      - 'package-lock.json'
 
 permissions:
   contents: write
