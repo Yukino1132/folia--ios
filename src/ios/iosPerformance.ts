@@ -1,9 +1,10 @@
-import { isIosNative } from '../ios/iosRuntime';
+import { isMobileSurface } from '../mobile/touchDevice';
 import { BUILTIN_VISUALIZER_MODES, DEFAULT_VISUALIZER_MODE } from '../types/visualizerModes';
 import type { VisualizerMode } from '../types';
 
 // src/ios/iosPerformance.ts
-// 原生壳（iOS）上容易把帧率打穿的几个地方，集中在这里，桌面/网页端一律走 else 分支、行为不变：
+// 手机上（iOS 原生壳与手机浏览器，见 mobile/touchDevice）容易把帧率打穿的几个地方，集中在这里，
+// 桌面端一律走 else 分支、行为不变：
 // - 重型歌词样式：3D 场景或重着色器，换歌即重编译、满屏重绘；
 // - 随机池：不再把重型样式放进去，每首换一次不必为画面扛这个；
 // - 预热：只挑轻的一两个，避免同时占住多个 WebGL 上下文；
@@ -23,12 +24,12 @@ const HEAVY_VISUALIZER_MODES = new Set<string>([
 
 /** 手机上这个样式是否属于重型（桌面端恒为 false）。 */
 export const isHeavyVisualizerOnMobile = (mode: string): boolean => (
-    isIosNative() && HEAVY_VISUALIZER_MODES.has(mode)
+    isMobileSurface() && HEAVY_VISUALIZER_MODES.has(mode)
 );
 
 /** 手机上随机池可用的样式：全集去掉重型。枚举顺序沿用 BUILTIN_VISUALIZER_MODES。 */
 export const mobileRandomVisualizerPool = (): VisualizerMode[] => (
-    isIosNative()
+    isMobileSurface()
         ? BUILTIN_VISUALIZER_MODES.filter(mode => !HEAVY_VISUALIZER_MODES.has(mode))
         : [...BUILTIN_VISUALIZER_MODES]
 );
@@ -50,7 +51,7 @@ export const mobilePrewarmCandidates = (savedMode: string): VisualizerMode[] => 
 const MOBILE_RENDER_DPR_CAP = 1.5;
 
 /** 这台机器允许的渲染像素比上限；桌面端无限（沿用原值）。 */
-export const renderPixelRatioCap = (): number => (isIosNative() ? MOBILE_RENDER_DPR_CAP : Number.POSITIVE_INFINITY);
+export const renderPixelRatioCap = (): number => (isMobileSurface() ? MOBILE_RENDER_DPR_CAP : Number.POSITIVE_INFINITY);
 
 /** 把请求的像素比压到本机上限之内，至少 1：桌面端原样返回。 */
 export const clampRenderPixelRatio = (dpr: number): number => {
