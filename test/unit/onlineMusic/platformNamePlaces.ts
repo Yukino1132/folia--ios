@@ -1,4 +1,4 @@
-﻿// test/unit/onlineMusic/platformNamePlaces.ts
+// test/unit/onlineMusic/platformNamePlaces.ts
 // The files outside a platform's own folders that name the platform, with the number of lines
 // that do (platformNameCount.ts counts them) and why those lines may stay. The numbers only go
 // down: omniArchitecture.test.ts fails when a file names a platform more often than it says
@@ -57,10 +57,11 @@ export const PLATFORM_NAME_PLACES: Record<string, PlatformNamePlace> = {
     'src/components/modal/lyric-match/LocalSongLyricMatch.tsx': { n: { netease: 1 }, kind: 'lyric' },
     'src/components/modal/lyric-match/navidromeSongMatch.ts': { n: { netease: 1 }, kind: 'lyric' },
     'src/components/modal/settings/pages/HelpPage.tsx': { n: { qq: 5 }, kind: 'namesake', why: 'the QQ chat app\'s community group, not QQ Music: its number and its i18n key' },
-    'src/components/modal/settings/pages/IntegrationPage.tsx': { n: { netease: 7 }, kind: 'stored', why: 'the stored setting neteaseScrobbleEnabled and its i18n keys' },
+    'src/components/modal/settings/pages/IntegrationPage.tsx': { n: { netease: 9 }, kind: 'stored', why: 'the stored setting neteaseScrobbleEnabled and its i18n keys; raised by the two rows a phone needs, the relay address and the pasted credential' },
     'src/components/modal/settings/pages/LyricsPage.tsx': { n: { spotify: 1 }, kind: 'lyric', why: 'which of two hand-written descriptions of the lyric sources is shown' },
     'src/components/modal/settings/pages/integration/NeteaseRelayRows.tsx': { n: { netease: 37 }, kind: 'stored', why: 'the relay address a phone has to be told, since its package cannot be rebuilt: the stored key, the i18n keys and the platform name in the row' },
-    'src/components/modal/settings/pages/integration/options.ts': { n: { netease: 2 }, kind: 'stored', why: 'an i18n key' },
+    'src/components/modal/settings/pages/integration/NeteaseSignInRow.tsx': { n: { netease: 27 }, kind: 'stored', why: 'the credential row a phone needs because the scan confirmation is refused: the session key it reads and writes, the i18n keys and the platform name in the row' },
+    'src/components/modal/settings/pages/integration/options.ts': { n: { netease: 3 }, kind: 'stored', why: 'an i18n key' },
     'src/components/panelTab/FmTab.tsx': { n: { qq: 1, bodian: 1 }, kind: 'doc' },
     'src/components/shared/CoverSizeAuditPanel.tsx': { n: { netease: 6 }, kind: 'question', why: 'a developer panel: a filter for the cover requests that go to one picture host' },
     'src/components/shared/qqCommunity.ts': { n: { qq: 3 }, kind: 'namesake', why: 'the number of the QQ chat app\'s community group, not QQ Music' },
