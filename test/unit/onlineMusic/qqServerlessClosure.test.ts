@@ -24,6 +24,61 @@ const IMPORT_SPECIFIER = /(?:\bfrom\s*|\bimport\s*\(\s*)['"]([^'"]+)['"]/g;
 const PROCESS_ENV_REFERENCE = /\bprocess\.env\.([A-Z0-9_]+)/g;
 const BUFFER_REFERENCE = /\bBuffer\s*(?:\.|\()/;
 
+// wrangler.jsonc 是 JSONC：配置里允许 `//` 注释（Wrangler 自己会剥），而 JSON.parse 不认。
+// 先去掉注释和悬空逗号再解析，保留配置里的说明文字。
+function parseJsonc(source: string): unknown {
+    let out = '';
+    let inString = false;
+    let inLineComment = false;
+    let inBlockComment = false;
+    for (let i = 0; i < source.length; i += 1) {
+        const char = source[i];
+        const next = source[i + 1];
+        if (inLineComment) {
+            if (char === '\n') {
+                inLineComment = false;
+                out += char;
+            }
+            continue;
+        }
+        if (inBlockComment) {
+            if (char === '*' && next === '/') {
+                inBlockComment = false;
+                i += 1;
+            }
+            continue;
+        }
+        if (inString) {
+            out += char;
+            if (char === '\\') {
+                out += next ?? '';
+                i += 1;
+            } else if (char === '"') {
+                inString = false;
+            }
+            continue;
+        }
+        if (char === '"') {
+            inString = true;
+            out += char;
+            continue;
+        }
+        if (char === '/' && next === '/') {
+            inLineComment = true;
+            i += 1;
+            continue;
+        }
+        if (char === '/' && next === '*') {
+            inBlockComment = true;
+            i += 1;
+            continue;
+        }
+        out += char;
+    }
+    // 注释行被剥掉后可能留下 `,` 紧跟 `}` 或 `]`，JSON.parse 不认这种悬空逗号。
+    return JSON.parse(out.replace(/,(\s*[}\]])/g, '$1'));
+}
+
 /** 从入口出发遍历相对导入，回传（已访问文件, 非相对 specifier 集合）。 */
 function walkImportGraph(entry: string): { files: string[]; external: string[] } {
     const seen = new Set<string>();
@@ -80,7 +135,7 @@ describe('QQ serverless deployment gates', () => {
             }
         }
 
-        const wranglerConfig = JSON.parse(readFileSync(path.join(repoRoot, 'wrangler.jsonc'), 'utf8')) as {
+        const wranglerConfig = parseJsonc(readFileSync(path.join(repoRoot, 'wrangler.jsonc'), 'utf8')) as {
             define?: Record<string, string>;
         };
         const uncovered = [...references].filter(reference => !(reference in (wranglerConfig.define ?? {})));
