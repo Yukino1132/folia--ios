@@ -285,7 +285,7 @@ export default async function viteConfig(_config: ConfigEnv): Promise<UserConfig
         // 预缓存那 18MB 每次启动都要重新登记。CAPACITOR_BUILD=true 时整块关掉。
         disable: process.env.CAPACITOR_BUILD === 'true',
         registerType: 'autoUpdate',
-        includeAssets: ['icon.svg'],
+        includeAssets: ['icon.svg', 'icon-192.png', 'icon-512.png', 'apple-touch-icon.png', 'favicon-32.png'],
         devOptions: {
           enabled: true
         },
@@ -310,18 +310,44 @@ export default async function viteConfig(_config: ConfigEnv): Promise<UserConfig
           navigateFallbackDenylist: [/^\/api(?:\/|$)/, /^\/__folia_cover\//]
         },
         manifest: {
+          // 手机浏览器「添加到主屏幕」用的那份清单。PNG 是必须的：安卓只有拿到 192/512 的
+          // PNG 才认为这个站可安装（一张 SVG 不够），iOS 则只认 apple-touch-icon 的 PNG。
+          id: '/',
           name: 'Folia Music',
           short_name: 'Folia',
-          description: 'A beautiful AI-themed music player',
+          description: '一个动态歌词播放器，支持 AI 主题生成',
+          lang: 'zh-CN',
+          start_url: '/',
+          scope: '/',
           theme_color: '#09090b',
           background_color: '#09090b',
           display: 'standalone',
+          orientation: 'any',
           icons: [
+            {
+              src: 'icon-192.png',
+              sizes: '192x192',
+              type: 'image/png',
+              purpose: 'any'
+            },
+            {
+              src: 'icon-512.png',
+              sizes: '512x512',
+              type: 'image/png',
+              purpose: 'any'
+            },
+            {
+              // 这一个按 44% 缩放画在黑底上，四周留足遮罩安全区（安卓会拿它裁圆形/圆角图标）。
+              src: 'icon-maskable-512.png',
+              sizes: '512x512',
+              type: 'image/png',
+              purpose: 'maskable'
+            },
             {
               src: 'icon.svg',
               sizes: '512x512',
               type: 'image/svg+xml',
-              purpose: 'any maskable'
+              purpose: 'any'
             }
           ]
         }
