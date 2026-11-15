@@ -12,8 +12,7 @@ import type { TransportButtonAction } from './playback/bridges/useTransportComma
 import { usePlayerOverlayRoot, usePlayerOverlayReservation } from '../../hooks/usePlayerOverlayLayout';
 import { usePlayerChromeSettingsStore } from '../../stores/usePlayerChromeSettingsStore';
 import { useNativeTrafficLights } from '../../hooks/useNativeTrafficLights';
-import { IOS_SAFE_TOP_MIN, isIosNative } from '../../ios/iosRuntime';
-import { useIosTopInsetDebug } from '../../ios/useIosTopInsetDebug';
+import { isMobileSurface } from '../../mobile/touchDevice';
 import {
     CLICK_THROUGH_MEDIA_CONTROLS_GAP,
     CLICK_THROUGH_UNLOCK_BUTTON_GAP,
@@ -176,18 +175,17 @@ const AppShell: React.FC<AppShellProps> = ({
     const showsPlayerHeaderBlur = isPlayerView && playerHeaderBlur && !isMainWindowClickThroughEnabled;
     const shouldRenderTitlebarBackdrop = !isPlayerView || showsPlayerHeaderBlur || (useCustomWindowRadius && !isMainWindowClickThroughEnabled);
     const isTitlebarBackdropVisible = isTitlebarRevealed || (showsPlayerHeaderBlur && alwaysShowMainWindowTitlebar);
-    // iOS 原生壳把安全区收在根容器的一次内缩里（上面的 top/bottom 内边距），
+    // iOS 原生壳与手机浏览器都把安全区收在根容器的一次内缩里（下面的 top/bottom/左右内边距），
     // 这样 fixed 定位的播放层、面板、弹窗都自动落在安全区内，不用逐层改定位。
-    // padding 只把内容推下去，但 absolute/fixed 子层仍从 padding 外沿开始，所以这层盒子还要
-    // transform 一下：让它的包含块从内容区左上角算起（顶栏、返回按钮才真正落在状态栏下面）。
-    const isIosShell = isIosNative() && !isElectronWindow;
-    useIosTopInsetDebug();
-    const safeAreaInsetStyle: React.CSSProperties = isIosShell
+    // 左右两条是横屏用的：横过来之后刘海跑到侧边，只内缩上下会让内容压在刘海下面。
+    const isTouchShell = isMobileSurface() && !isElectronWindow;
+    const safeAreaInsetStyle: React.CSSProperties = isTouchShell
         ? {
-            paddingTop: IOS_SAFE_TOP_MIN + 'px',
+            paddingTop: 'var(--folia-safe-top, env(safe-area-inset-top, 0px))',
             paddingBottom: 'var(--folia-safe-bottom, env(safe-area-inset-bottom, 0px))',
+            paddingLeft: 'var(--folia-safe-left, env(safe-area-inset-left, 0px))',
+            paddingRight: 'var(--folia-safe-right, env(safe-area-inset-right, 0px))',
             boxSizing: 'border-box',
-            transform: 'translateZ(0)',
         }
         : {};
     // 开了顶栏模糊时用更实的一层：0.18 的白在深色画面上只会混成深灰，浅色主题的深色按钮照样看不清，
