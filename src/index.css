@@ -56,21 +56,30 @@ body:lang(vi) {
   font-family: 'Inter', "Segoe UI", system-ui, var(--font-cjk-sans), sans-serif;
 }
 
-/* iOS 原生壳（Capacitor）：WKWebView 没有鼠标，桌面端那套悬停/选中/拖拽的字面行为在触控上只会添乱。
-   这里的规则只挂在 html.folia-ios 下，Web 与 Electron 构建一行都不受影响（类名由
-   src/ios/installIosMobileChrome.ts 挂上）。 */
-html.folia-ios body {
+/* 触控那一套：iOS 原生壳（Capacitor，WKWebView 没有鼠标）与手机浏览器共用同一层规则。
+   桌面端那套悬停/选中/拖拽的字面行为在触控上只会添乱，所以挂载点只有两个：
+   html.folia-ios（src/ios/installIosMobileChrome.ts）与 html.folia-touch
+   （src/mobile/installMobileWebChrome.ts）。Web 桌面与 Electron 两个类都没有，一行都不受影响。 */
+:root:is(.folia-ios, .folia-touch) body {
   overscroll-behavior: none;
   -webkit-touch-callout: none;
   -webkit-tap-highlight-color: transparent;
 }
 
-html.folia-ios #root {
+:root:is(.folia-ios, .folia-touch) #root {
   height: 100%;
 }
 
-/* 输入法弹出时键盘高度由 useIosKeyboardInset 写进变量；浮在最上面的输入框靠它让位。 */
-html.folia-ios.folia-keyboard-open [data-folia-anchor-bottom] {
+/* 手机浏览器：地址栏收起/展开会让 100vh 与真实可视高度差出一截，而应用是 fixed 满屏 ——
+   底部那排控件会被工具栏压住。--folia-vh 是 visualViewport 报回来的真实高度
+   （src/mobile/installMobileWebChrome.ts 写入），键盘弹起时它保持不变，避免整个界面跟着缩。 */
+:root.folia-touch #root {
+  height: var(--folia-vh, 100dvh);
+}
+
+/* 输入法弹出时键盘高度写进变量（原生壳是 useIosKeyboardInset，网页是 installMobileWebChrome）；
+   浮在最上面的输入框靠它让位。 */
+:root:is(.folia-ios, .folia-touch).folia-keyboard-open [data-folia-anchor-bottom] {
   padding-bottom: var(--folia-keyboard-inset, 0px);
 }
 
@@ -78,14 +87,14 @@ html.folia-ios.folia-keyboard-open [data-folia-anchor-bottom] {
    这里给所有 button/[role=button] 兜一个 44×44 的命中盒：图标本身不变形，多出来的
    空间用伪元素撑开（负 inset 外扩），所以不会顶乱紧凑的图标排版。已经在 44px 以上的
    控件不受影响（伪元素只是落在它们自己身上）。 */
-html.folia-ios button,
-html.folia-ios [role='button'] {
+:root:is(.folia-ios, .folia-touch) button,
+:root:is(.folia-ios, .folia-touch) [role='button'] {
   position: relative;
   touch-action: manipulation;
 }
 
-html.folia-ios button::after,
-html.folia-ios [role='button']::after {
+:root:is(.folia-ios, .folia-touch) button::after,
+:root:is(.folia-ios, .folia-touch) [role='button']::after {
   content: '';
   position: absolute;
   inset: 50% auto auto 50%;
@@ -97,40 +106,61 @@ html.folia-ios [role='button']::after {
 }
 
 /* 手指按下要立刻有反馈：桌面端全靠 :hover，触屏没有 hover，没有这一条按下去毫无动静。 */
-html.folia-ios button:active,
-html.folia-ios [role='button']:active {
+:root:is(.folia-ios, .folia-touch) button:active,
+:root:is(.folia-ios, .folia-touch) [role='button']:active {
   transform: scale(0.97);
   transition: transform 80ms ease-out;
 }
 
 /* 列表项、卡片这类整块可点的区域同理：桌面端靠指针的位置高亮，触屏要的是按下即反馈。 */
-html.folia-ios [data-folia-tap] {
+:root:is(.folia-ios, .folia-touch) [data-folia-tap] {
   -webkit-user-select: none;
   user-select: none;
   touch-action: manipulation;
 }
 
-html.folia-ios [data-folia-tap]:active {
+:root:is(.folia-ios, .folia-touch) [data-folia-tap]:active {
   filter: brightness(1.12);
 }
 
 /* 滚动手感：惯性滚动与边缘不回弹（AppShell 已按安全区内缩，回弹会露出底色）。 */
-html.folia-ios [data-scroll],
-html.folia-ios .hide-scrollbar,
-html.folia-ios .overflow-y-auto,
-html.folia-ios .overflow-x-auto,
-html.folia-ios .overflow-auto {
+:root:is(.folia-ios, .folia-touch) [data-scroll],
+:root:is(.folia-ios, .folia-touch) .hide-scrollbar,
+:root:is(.folia-ios, .folia-touch) .overflow-y-auto,
+:root:is(.folia-ios, .folia-touch) .overflow-x-auto,
+:root:is(.folia-ios, .folia-touch) .overflow-auto {
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
 }
 
-/* 性能：iOS 的 WKWebView 合成大面积的 backdrop-filter 很贵，玻璃面板叠在 3D 墙面/
-   visualizer（WebGL）上时尤其明显。原生壳里把 2xl/3xl 档降到 xl（模糊半径 24px → 12px），
+/* 性能：触控端合成大面积的 backdrop-filter 很贵（iOS 的 WKWebView 尤甚），玻璃面板叠在
+   3D 墙面 / visualizer（WebGL）上时尤其明显。把 2xl/3xl 档降到 xl（模糊半径 24px → 12px），
    观感几乎一样，滚动与动画的帧率回来一截。真机再省不下去时可以在设置里关掉动画强度。 */
-html.folia-ios .backdrop-blur-2xl,
-html.folia-ios .backdrop-blur-3xl {
+:root:is(.folia-ios, .folia-touch) .backdrop-blur-2xl,
+:root:is(.folia-ios, .folia-touch) .backdrop-blur-3xl {
   -webkit-backdrop-filter: blur(12px) !important;
   backdrop-filter: blur(12px) !important;
+}
+
+/* 窄缝那一排（首页顶部的书脊）在触控端只有 34px 上下，命中全靠上面那条 ::after 撑到 44px 的热区。
+   这里只补**不占宽度**的那部分：390px 一行本来就排满了（书脊图标 + 可横向滚的导航段 + 账户 + 工具列），
+   把视觉尺寸抬到 44px 会直接把导航段挤成一条缝（实测只剩 20px，页签全部看不见）。
+   所以页签只抬高度（窄缝 52px 高，44px 放得下），横向宽度维持原样，放不下的部分继续横向滚。 */
+@media (pointer: coarse) {
+  :root:is(.folia-ios, .folia-touch) .bravais-seam-home-row.is-compact .bravais-seam-home-tab {
+    min-height: 44px;
+  }
+
+  /* 导航段横向滚的时候贴一下边，滑过去不会停在一个半页签上。 */
+  :root:is(.folia-ios, .folia-touch) .bravais-seam-home-row > .bravais-seam-home-row-nav {
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
+  }
+
+  :root:is(.folia-ios, .folia-touch) .bravais-seam-home-row .bravais-seam-home-tab {
+    scroll-snap-align: center;
+  }
 }
 
 /* 播放页空闲时隐藏鼠标指针。挂点在播放页的视觉层容器上，弹窗和浮动控件都在它外面，
