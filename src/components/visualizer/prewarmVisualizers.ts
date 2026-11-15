@@ -1,6 +1,6 @@
 import { useVisualizerSettingsStore } from '../../stores/useVisualizerSettingsStore';
 import { VISUALIZER_REGISTRY, getVisualizerRegistryEntry, type VisualizerRegistryEntry } from './registry';
-import { isIosNative } from '../../ios/iosRuntime';
+import { isMobileSurface } from '../../mobile/touchDevice';
 import { isHeavyVisualizerOnMobile, mobilePrewarmCandidates } from '../../ios/iosPerformance';
 
 // src/components/visualizer/prewarmVisualizers.ts
@@ -44,7 +44,8 @@ let idleScheduled = false;
 export const prewarmVisualizersWhenIdle = (): void => {
     if (idleScheduled) return;
     idleScheduled = true;
-    const mobile = isIosNative();
+    // 手机浏览器和 iOS 壳一样按移动端规格预热（WebGL 上下文在手机上更贵）。
+    const mobile = isMobileSurface();
     setTimeout(() => {
         const start = () => {
             const saved = useVisualizerSettingsStore.getState().visualizerMode;
