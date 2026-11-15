@@ -22,8 +22,10 @@ import { bootstrapIosRuntime, isIosNative } from './ios/iosRuntime';
 import { installIosMobileChrome } from './ios/installIosMobileChrome';
 import { installNativeHttp } from './ios/installNativeHttp';
 import { useIosKeyboardInset, useIosSafeAreaMetrics } from './ios/useIosSafeAreaMetrics';
-// 鍓綔鐢?import锛歴tore 鍦ㄦā鍧楀姞杞芥椂灏辨妸 `<html data-reduce-motion>` 鍐欏ソ骞朵繚鎸佸悓姝ャ€傛斁鍦?bootstrap
-// 鑰屼笉鏄?App 閲岋紝鏄洜涓轰笅闈㈡寜 URL 鎸傜殑鏍逛笉姝?App 鈥斺€?杩滅▼鎺у埗绐楀彛鐨勮繘搴﹁緣鍏変篃璇昏繖涓睘鎬с€?import './stores/useMotionSettingsStore';
+import { installMobileWebChrome } from './mobile/installMobileWebChrome';
+// 副作用 import：store 在模块加载时就把 `<html data-reduce-motion>` 写好并保持同步。放在 bootstrap
+// 而不是 App 里，是因为下面按 URL 挂的根不是 App —— 远程控制窗口的进度光效也读这个属性。
+import './stores/useMotionSettingsStore';
 
 // src/bootstrap.tsx
 // Mounts the React app after index.tsx installs runtime-level browser shims.
@@ -51,6 +53,9 @@ if (isIosNative()) {
     installIosMobileChrome();
     // 第三方接口不给跨域头，WKWebView 的 fetch 会被 CORS 拦掉；跨域请求改走原生 HTTP。
     installNativeHttp();
+} else {
+    // 手机浏览器：触控样式层、真实可视高度、输入法避让。桌面浏览器在这里什么都不做。
+    installMobileWebChrome();
 }
 
 installNativeDragGuard();
