@@ -1,4 +1,4 @@
-// test/unit/onlineMusic/platformNamePlaces.ts
+﻿// test/unit/onlineMusic/platformNamePlaces.ts
 // The files outside a platform's own folders that name the platform, with the number of lines
 // that do (platformNameCount.ts counts them) and why those lines may stay. The numbers only go
 // down: omniArchitecture.test.ts fails when a file names a platform more often than it says
@@ -59,7 +59,7 @@ export const PLATFORM_NAME_PLACES: Record<string, PlatformNamePlace> = {
     'src/components/modal/settings/pages/HelpPage.tsx': { n: { qq: 5 }, kind: 'namesake', why: 'the QQ chat app\'s community group, not QQ Music: its number and its i18n key' },
     'src/components/modal/settings/pages/IntegrationPage.tsx': { n: { netease: 7 }, kind: 'stored', why: 'the stored setting neteaseScrobbleEnabled and its i18n keys' },
     'src/components/modal/settings/pages/LyricsPage.tsx': { n: { spotify: 1 }, kind: 'lyric', why: 'which of two hand-written descriptions of the lyric sources is shown' },
-    'src/components/modal/settings/pages/integration/NeteaseRelayRows.tsx': { n: { netease: 38 }, kind: 'stored', why: 'the relay address a phone has to be told, since its package cannot be rebuilt: the stored key, the i18n keys and the platform name in the row' },
+    'src/components/modal/settings/pages/integration/NeteaseRelayRows.tsx': { n: { netease: 37 }, kind: 'stored', why: 'the relay address a phone has to be told, since its package cannot be rebuilt: the stored key, the i18n keys and the platform name in the row' },
     'src/components/modal/settings/pages/integration/options.ts': { n: { netease: 2 }, kind: 'stored', why: 'an i18n key' },
     'src/components/panelTab/FmTab.tsx': { n: { qq: 1, bodian: 1 }, kind: 'doc' },
     'src/components/shared/CoverSizeAuditPanel.tsx': { n: { netease: 6 }, kind: 'question', why: 'a developer panel: a filter for the cover requests that go to one picture host' },
@@ -139,7 +139,12 @@ export const PLATFORM_NAME_PLACES: Record<string, PlatformNamePlace> = {
     'src/utils/playerLikeAvailability.ts': { n: { bodian: 1 }, kind: 'doc' },
     'src/utils/stageClientDemo.ts': { n: { netease: 3 }, kind: 'stored', why: 'the stage API\'s lyric source type' },
     'src/vite-env.d.ts': { n: { netease: 24, qq: 14, kugou: 6, bodian: 4, ytm: 4, spotify: 4, qishui: 4, appleMusic: 4, fnmusic: 3 }, kind: 'stored', why: 'the types of the preload bridge and of the stage API\'s lyric source; raised by the upstream merge 2026-10-17; fnmusic adds its request and status channels; appleMusic for the companion bridge type; the native shell raises netease by one and qq and kugou by one each for its runtime-config backend addresses' },
-    'worker/index.ts': { n: { qq: 11 }, kind: 'main', why: 'routes the QQ backend' },
+    'worker/index.ts': { n: { netease: 17, qq: 11 }, kind: 'main', why: 'routes the QQ backend and the netease relay entry' },
+    'worker/netease-api.ts': { n: { netease: 22 }, kind: 'main', why: 'the worker entry of the netease backend' },
+    'worker/netease-login.ts': { n: { netease: 5 }, kind: 'main', why: 'the netease login session the worker keeps' },
+    'worker/netease-module-map.mjs': { n: { netease: 380 }, kind: 'main', why: 'the generated module map of the netease bundle' },
+    'worker/netease-relay.ts': { n: { netease: 6 }, kind: 'main', why: 'forwards the API calls to a relay the user runs' },
+    'worker/netease-request.ts': { n: { netease: 9 }, kind: 'main', why: 'signs the requests the worker sends' },
     'worker/lyric-proxy.ts': { n: { qq: 1, kugou: 1 }, kind: 'main', why: 'the hosts the lyric relay may reach' },
     'worker/qq.ts': { n: { qq: 32 }, kind: 'main', why: 'the worker entry of the QQ backend' },
     'worker/qqQrChannel.ts': { n: { qq: 6 }, kind: 'main', why: 'a Durable Object the worker binds by name' },
