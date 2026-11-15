@@ -7,6 +7,7 @@ import { useStageSettingsStore } from '../../../../stores/useStageSettingsStore'
 import { Button, CopyValue, Group, Reveal, Row, Status, Toggle, Value, type SettingsOptionDef } from '../kit';
 import NavidromeRows from './integration/NavidromeRows';
 import NeteaseRelayRows from './integration/NeteaseRelayRows';
+import NeteaseSignInRow from './integration/NeteaseSignInRow';
 import { isIosNative } from '../../../../ios/iosRuntime';
 import { O, SERVICES, STREAMING } from './integration/options';
 import { DesktopStageRows, WebStageRows } from './integration/StageModeRows';
@@ -67,8 +68,9 @@ const IntegrationPage: React.FC = () => {
                 >
                     <Toggle checked={scrobbleEnabled} onChange={setScrobbleEnabled} />
                 </Row>
-                {/* 原生壳里装好之后改不了包，网易云中转地址只能在这里填（见 NeteaseRelayRows）。 */}
+                {/* 原生壳里装好之后改不了包，网易云中转地址与登录凭据只能在这里填（见 NeteaseRelayRows、NeteaseSignInRow）。 */}
                 {isIosNative() && <NeteaseRelayRows />}
+                {isIosNative() && <NeteaseSignInRow />}
             </Group>
 
             <Group def={STREAMING}>
