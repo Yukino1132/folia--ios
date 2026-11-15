@@ -1,59 +1,73 @@
 // src/services/onlineMusic/netease/neteaseRelayProbe.ts
-// 中转地址填好之后能不能用，由应用自己去问一次：拿 `{base}/login/qr/key` 要一个扫码 key。
-// 这样用户在设置里点「测试」就能立刻知道地址是不是写对了、服务是不是活着，而不是等到登录窗口才发现。
-// 只发一次 GET，不读任何登录态，也不写缓存。
+// 中转地址的连通性探测：给设置页的"测试连接"和保存前的校验用。
+// 只发一次最轻的请求（取二维码 unikey），判断三件事：能不能连上、有没有超时、回的是不是这个服务。
+// 不读也不写任何账号状态，探测本身就是一次匿名请求。
 
+/** 探测的超时。手机上弱网、跨运营商直连都常见，给得比普通请求宽一点。 */
 const PROBE_TIMEOUT_MS = 12_000;
 
 export type NeteaseRelayProbe =
     | { ok: true; apiBase: string; durationMs: number }
     | { ok: false; reason: 'empty' | 'unreachable' | 'timeout' | 'bad-answer'; detail: string };
 
-/** 把用户输入规整成地址：补 https、去尾斜杠；不是 http(s) 就当没填。 */
+/**
+ * 把用户填的地址规整成探测用的基址：补协议、去尾斜杠。
+ * 与 neteaseEndpointSetting.ts 的 normalize 保持一致（那边是权威实现，这里只做探测前的清洗，
+ * 免得为了探测去 import 一个带 localStorage 的模块）。
+ */
 export const normalizeNeteaseRelayBase = (raw: string): string => {
     const trimmed = raw.trim();
     if (!trimmed) return '';
-    const withScheme = /^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`;
-    if (!/^https?:\/\/[^/\s]+/i.test(withScheme)) return '';
-    return withScheme.replace(/\/+$/, '');
+    if (!/^https?:\/\//i.test(trimmed)) {
+        const looksLocalOrIp = /^\[[0-9a-fA-F:.]+\]/i.test(trimmed)
+            || /^\d{1,3}(?:\.\d{1,3}){3}(?::\d+)?(?:[/?#]|$)/i.test(trimmed)
+            || /^(?:localhost|127\.0\.0\.1|0\.0\.0\.0)(?::\d+)?(?:[/?#]|$)/i.test(trimmed)
+            || /^[^/?#]+:\d+(?:[/?#]|$)/.test(trimmed);
+        return `${looksLocalOrIp ? 'http' : 'https'}://${trimmed.replace(/\/+$/, '')}`;
+    }
+    return trimmed.replace(/\/+$/, '');
 };
 
 /**
- * 问一次中转后端。`NeteaseCloudMusicApi` 的 `/login/qr/key` 回的是
- * `{ code: 200, data: { unikey } }`，这里只确认它能连通并给出这个形状。
+ * 探一次中转是否可用。成功条件是回来的 JSON 里有 unikey——
+ * 其它任何 HTTP 服务都不会在这个路径回这个字段，所以"能连上但不是这个服务"也能分辨出来。
  */
 export const probeNeteaseRelay = async (rawBase: string): Promise<NeteaseRelayProbe> => {
     const apiBase = normalizeNeteaseRelayBase(rawBase);
     if (!apiBase) return { ok: false, reason: 'empty', detail: '' };
 
+    const started = Date.now();
     const controller = new AbortController();
-    const startedAt = Date.now();
     const timer = setTimeout(() => controller.abort(), PROBE_TIMEOUT_MS);
     try {
-        const response = await fetch(`${apiBase}/login/qr/key?timestamp=${startedAt}`, {
+        const response = await fetch(`${apiBase}/login/qr/key?timestamp=${Date.now()}`, {
             method: 'GET',
-            credentials: 'omit',
             signal: controller.signal,
-            headers: { Accept: 'application/json, text/plain, */*' },
+            // 探测不需要也不该带凭据：避免把 cookie 发给一个还没确认身份的地址。
+            credentials: 'omit',
         });
-        const durationMs = Date.now() - startedAt;
-        const text = await response.text();
         if (!response.ok) {
             return { ok: false, reason: 'unreachable', detail: `HTTP ${response.status}` };
         }
-        // 有的部署会在前面加一层网关，回的是 HTML：那也不是能用的中转。
-        let answer: any = null;
+        let answer: unknown;
         try {
-            answer = JSON.parse(text);
-        } catch {
-            return { ok: false, reason: 'bad-answer', detail: text.slice(0, 120) };
+            answer = await response.json();
+        } catch (error) {
+            console.warn('[netease] 中转探测：返回的不是 JSON', error);
+            return { ok: false, reason: 'bad-answer', detail: 'not JSON' };
         }
-        const key = answer?.data?.unikey ?? answer?.unikey;
-        if (typeof key === 'string' && key) return { ok: true, apiBase, durationMs };
-        return { ok: false, reason: 'bad-answer', detail: JSON.stringify(answer).slice(0, 120) };
+        const unikey = (answer as { data?: { unikey?: unknown }; unikey?: unknown } | null)?.data?.unikey
+            ?? (answer as { unikey?: unknown } | null)?.unikey;
+        if (typeof unikey !== 'string' || !unikey) {
+            return { ok: false, reason: 'bad-answer', detail: 'no unikey' };
+        }
+        return { ok: true, apiBase, durationMs: Date.now() - started };
     } catch (error) {
         const aborted = (error as { name?: string } | null)?.name === 'AbortError';
-        return { ok: false, reason: aborted ? 'timeout' : 'unreachable', detail: (error as Error)?.message ?? '' };
+        if (aborted) return { ok: false, reason: 'timeout', detail: '' };
+        console.warn('[netease] 中转探测：请求失败', error);
+        const detail = error instanceof Error ? error.message : String(error);
+        return { ok: false, reason: 'unreachable', detail };
     } finally {
         clearTimeout(timer);
     }
