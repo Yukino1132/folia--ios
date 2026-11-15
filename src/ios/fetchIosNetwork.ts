@@ -111,16 +111,32 @@ export const iosNativeFetch = async (input: RequestInfo | URL, init?: RequestIni
     });
 };
 
+/**
+ * 地址里的主机是 IP 字面量（IPv4 或带方括号的 IPv6）。
+ * WKWebView 里 `new URL()` 对 `http://[240e:...]:3457` 这种 IPv6 字面量在部分 iOS 版本上会抛，
+ * 抛了就落到 catch 返回 false，请求退回 WebView 的 fetch 被 CORS 拦掉，界面上只表现为"连不上"。
+ * 这类地址一定是跨域的，直接判定走原生层，不经过 URL 解析。
+ */
+const isIpLiteralHost = (url: string): boolean => {
+    // http://[240e:3b5:...]:3457/... 或 http://1.2.3.4:3457/...
+    return /^https?:\/\/\[[0-9a-fA-F:.]+\]/i.test(url) || /^https?:\/\/\d{1,3}(?:\.\d{1,3}){3}(?::\d+)?(?:[/?#]|$)/i.test(url);
+};
+
 /** 这条 URL 是否值得走原生请求（原生壳 + 跨域 http(s)）。包内资源与同源请求仍走 WebView 的 fetch。 */
 export const shouldUseIosNativeFetch = (url: string): boolean => {
     if (!getIosHttpPlugin()) return false;
     if (!/^https?:/i.test(url)) return false;
+    // IP 字面量（含 IPv6 方括号）一律走原生层：它是跨域的，且 WKWebView 对它的 URL 解析不可靠。
+    if (isIpLiteralHost(url)) return true;
     if (typeof location === 'undefined') return true;
+    // 原生壳的 location 是 capacitor://localhost.folia 这类非标准 scheme，new URL() 组合解析可能失败。
+    // 解析失败时按"跨域"处理：走原生层是安全的兜底（原生层不受 CORS 约束），
+    // 退回 WebView 的 fetch 则一定被拦。这里选前者。
     try {
         const target = new URL(url, location.href);
         const sameOrigin = target.origin === location.origin;
         return !sameOrigin;
     } catch {
-        return false;
+        return true;
     }
 };
