@@ -9,23 +9,35 @@ import { getStoredString, setStoredString } from '../../../stores/storagePrimiti
 
 const STORAGE_KEY = 'folia.netease.apiBase';
 
-/** 把用户输入规整成地址：补协议、去结尾斜杠；不是 http(s) 或不合法时返回空字符串。 */
+/**
+ * 把用户输入规整成地址：补协议、去结尾斜杠；不是 http(s) 或不合法时返回空字符串。
+ *
+ * 补协议的规则按端口判断，不是一律补 https：自建的中转（本地电脑、局域网、直连的 IP 字面量）
+ * 绝大多数只跑 http，一律补 https 会让请求在 TLS 握手阶段就失败，界面上只表现为"连不上"。
+ * 只写了主机名、看起来是正经域名的（example.com/api）才补 https。
+ */
 const normalize = (raw: string): string => {
     const trimmed = raw.trim();
     if (!trimmed) return '';
-    // 只认 http(s)：粘贴时常见的 `example.com/api` 补上 https，其它（file:、javascript:）当没填。
-    const withScheme = /^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`;
+    // file:、javascript: 这类不是我们认的协议，直接当没填。
+    if (/^[a-z][a-z0-9+.-]*:/i.test(trimmed) && !/^https?:/i.test(trimmed)) return '';
+    let withScheme: string;
+    if (/^https?:\/\//i.test(trimmed)) {
+        withScheme = trimmed;
+    } else {
+        // 没写协议时：带端口、是 IP 字面量（IPv4 或 [IPv6]）、或指向本机/内网的，补 http；其余补 https。
+        const looksLocalOrIp = /^\[[0-9a-fA-F:.]+\]/i.test(trimmed)
+            || /^\d{1,3}(?:\.\d{1,3}){3}(?::\d+)?(?:[/?#]|$)/i.test(trimmed)
+            || /^(?:localhost|127\.0\.0\.1|0\.0\.0\.0)(?::\d+)?(?:[/?#]|$)/i.test(trimmed)
+            || /^[^/?#]+:\d+(?:[/?#]|$)/.test(trimmed);
+        withScheme = `${looksLocalOrIp ? 'http' : 'https'}://${trimmed}`;
+    }
     if (!/^https?:\/\/[^/\s]+/i.test(withScheme)) return '';
     return withScheme.replace(/\/+$/, '');
 };
 
 /** 用户填的地址（已规整）；空字符串表示没填。 */
-export const getNeteaseApiBaseOverride = (): string => {
-    // Node（单元测试、SSR）里没有 localStorage：getStoredString 只挡了 window 缺失，
-    // 而 jsdom 之外的测试环境恰好有全局对象却没有存储 —— 这里再挡一次，读不到就当没填。
-    if (typeof localStorage === 'undefined') return '';
-    return normalize(getStoredString(STORAGE_KEY, ''));
-};
+export const getNeteaseApiBaseOverride = (): string => normalize(getStoredString(STORAGE_KEY, ''));
 
 /** 存用户填的地址；传空字符串就是清除。 */
 export const setNeteaseApiBaseOverride = (value: string): void => {
