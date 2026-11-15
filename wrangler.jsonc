@@ -1,19 +1,21 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
-  "name": "folia-major",
-  "main": "./worker/index.ts",
+  "name": "folia-web",
+  "pages_build_output_dir": "./dist",
   "compatibility_date": "2026-04-02",
+  "compatibility_flags": ["nodejs_compat", "nodejs_compat_populate_process_env"],
+  // QQ 上游库的 util/logger.js 在模块顶层读这三个变量的值。workerd 没有 process，
+  // 所以让 Wrangler 在编译期把它们替换成字面量，否则 isolate 初始化时就崩。
   "define": {
-    "process.env.NODE_ENV": "\"production\"",
-    "process.env.JEST_WORKER_ID": "undefined",
-    "process.env.LOG_LEVEL": "undefined"
+    "process.env.NODE_ENV": "\"\"",
+    "process.env.JEST_WORKER_ID": "\"\"",
+    "process.env.LOG_LEVEL": "\"\"",
   },
-  "assets": {
-    "directory": "./dist",
-    "binding": "ASSETS",
-    "not_found_handling": "single-page-application",
-    "run_worker_first": [
-      "/api/*"
-    ]
+  "vars": {
+    "NETEASE_ENABLE_GENERAL_UNBLOCK": "false",
+    // 中转后端：网易云那一层交给一台出口干净的服务器（家宽 IPv6 的 netease-deploy，
+    // 或 VPS + Caddy）。配了它，/api/* 全部转过去；不配就走 Worker 内置实现。
+    // "NETEASE_RELAY_BASE": "https://api.example.com",
+    // "NETEASE_RELAY_BASE": "http://[240e:3b5:1041:9f70:b0c2:b493:7031:b580]:3457",
   }
 }
